@@ -3,19 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Koehler Entry Door Pricer</title>
+  <meta name="description" content="Internal entry door list-price calculator for Koehler Home Improvement.">
 
-  <meta
-    name="description"
-    content="Internal entry door list-price calculator for Koehler Home Improvement."
-  >
-
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23003871'/%3E%3Cpath d='M18 52V12h28v40H18Zm6-6h16V18H24v28Zm11-16a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z' fill='white'/%3E%3C/svg%3E"
-  >
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23003871'/%3E%3Cpath d='M18 52V12h28v40H18Zm6-6h16V18H24v28Zm11-16a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z' fill='white'/%3E%3C/svg%3E">
 
   <style>
     :root {
@@ -26,7 +17,7 @@
       --muted: #647586;
       --paper: #f3f7fb;
       --line: #d7e2ec;
-      --white: #ffffff;
+      --white: #fff;
     }
 
     * {
@@ -37,12 +28,7 @@
       margin: 0;
       min-height: 100vh;
       color: var(--ink);
-      background: linear-gradient(
-        145deg,
-        #edf5fb 0%,
-        #fbfdff 50%,
-        #e3eef7 100%
-      );
+      background: linear-gradient(145deg, #edf5fb 0%, #fbfdff 50%, #e3eef7 100%);
       font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
     }
 
@@ -147,7 +133,7 @@
     }
 
     .choice label:hover {
-      border-color: #9eb5c5;
+      border-color: #9eb5a3;
     }
 
     .choice input:focus-visible + label {
@@ -229,7 +215,7 @@
       align-items: center;
       justify-content: space-between;
       min-height: 57px;
-      border-bottom: 1px solid #edf1f5;
+      border-bottom: 1px solid #edf1ed;
       gap: 16px;
     }
 
@@ -291,7 +277,7 @@
     }
 
     .total-label {
-      color: #dbe8f2;
+      color: #dbe5dd;
       font-size: 0.9rem;
     }
 
@@ -326,7 +312,7 @@
 
     .empty {
       padding: 16px 0;
-      color: #c9d7e2;
+      color: #c9d7cd;
     }
 
     .reset {
@@ -348,7 +334,7 @@
 
     .fine {
       margin: 14px 0 0;
-      color: #c9d7e2;
+      color: #c9d7cd;
       font-size: 0.78rem;
     }
 
@@ -473,29 +459,16 @@
 
         <div class="size-grid">
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w36"
-              value="1000"
-              data-label="3′6″ width"
-            >
+            <input type="radio" name="width" id="w36" value="0" data-label="3′6″ width">
 
             <label for="w36">
               <span>3′6″</span>
-              <small>+$1,000</small>
+              <small>Base</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w30"
-              value="0"
-              data-label="3′0″ width"
-              checked
-            >
+            <input type="radio" name="width" id="w30" value="0" data-label="3′0″ width" checked>
 
             <label for="w30">
               <span>3′0″</span>
@@ -504,77 +477,47 @@
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w210"
-              value="1000"
-              data-label="2′10″ width"
-            >
+            <input type="radio" name="width" id="w210" value="0" data-label="2′10″ width">
 
             <label for="w210">
               <span>2′10″</span>
-              <small>+$1,000</small>
+              <small>Base</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w28"
-              value="500"
-              data-label="2′8″ width"
-            >
+            <input type="radio" name="width" id="w28" value="0" data-label="2′8″ width">
 
             <label for="w28">
               <span>2′8″</span>
-              <small>+$500</small>
+              <small>Base</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w26"
-              value="500"
-              data-label="2′6″ width"
-            >
+            <input type="radio" name="width" id="w26" value="0" data-label="2′6″ width">
 
             <label for="w26">
               <span>2′6″</span>
-              <small>+$500</small>
+              <small>Base</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w24"
-              value="500"
-              data-label="2′4″ width"
-            >
+            <input type="radio" name="width" id="w24" value="0" data-label="2′4″ width">
 
             <label for="w24">
               <span>2′4″</span>
-              <small>+$500</small>
+              <small>Base</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="width"
-              id="w20"
-              value="1000"
-              data-label="2′0″ width"
-            >
+            <input type="radio" name="width" id="w20" value="0" data-label="2′0″ width">
 
             <label for="w20">
               <span>2′0″</span>
-              <small>+$1,000</small>
+              <small>Base</small>
             </label>
           </div>
         </div>
@@ -583,14 +526,7 @@
 
         <div class="size-grid">
           <div class="size-choice">
-            <input
-              type="radio"
-              name="height"
-              id="h68"
-              value="0"
-              data-label="6′8″ height"
-              checked
-            >
+            <input type="radio" name="height" id="h68" value="0" data-label="6′8″ height" checked>
 
             <label for="h68">
               <span>6′8″</span>
@@ -599,28 +535,16 @@
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="height"
-              id="h80"
-              value="2000"
-              data-label="8′0″ height"
-            >
+            <input type="radio" name="height" id="h80" value="900" data-label="8′0″ height">
 
             <label for="h80">
               <span>8′0″</span>
-              <small>+$2,000</small>
+              <small>+$900</small>
             </label>
           </div>
 
           <div class="size-choice">
-            <input
-              type="radio"
-              name="height"
-              id="cut-down"
-              value="1000"
-              data-label="Cut-down height"
-            >
+            <input type="radio" name="height" id="cut-down" value="1000" data-label="Cut-down height">
 
             <label for="cut-down">
               <span>Cut Down</span>
@@ -636,14 +560,7 @@
         <div class="options">
           <div class="option">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="sidelite"
-                id="one-sidelite"
-                value="1200"
-                data-label="One sidelite"
-              >
-
+              <input type="radio" name="sidelite" id="one-sidelite" value="1200" data-label="One sidelite">
               <label for="one-sidelite">One Sidelite</label>
             </div>
 
@@ -652,14 +569,7 @@
 
           <div class="option">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="sidelite"
-                id="two-sidelites"
-                value="2400"
-                data-label="Two sidelites"
-              >
-
+              <input type="radio" name="sidelite" id="two-sidelites" value="2400" data-label="Two sidelites">
               <label for="two-sidelites">Two Sidelites</label>
             </div>
 
@@ -668,15 +578,7 @@
 
           <div class="option glass-option disabled">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="glass-style"
-                id="decorative"
-                value="2500"
-                data-label="Decorative glass"
-                disabled
-              >
-
+              <input type="radio" name="glass-style" id="decorative" value="2500" data-label="Decorative glass" disabled>
               <label for="decorative">Decorative Glass</label>
             </div>
 
@@ -685,15 +587,7 @@
 
           <div class="option glass-option disabled">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="glass-style"
-                id="obscure"
-                value="1000"
-                data-label="Obscure glass"
-                disabled
-              >
-
+              <input type="radio" name="glass-style" id="obscure" value="1000" data-label="Obscure glass" disabled>
               <label for="obscure">Obscure Glass</label>
             </div>
 
@@ -702,15 +596,7 @@
 
           <div class="option glass-option disabled">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="glass-style"
-                id="rain"
-                value="1200"
-                data-label="Rain glass"
-                disabled
-              >
-
+              <input type="radio" name="glass-style" id="rain" value="1200" data-label="Rain glass" disabled>
               <label for="rain">Rain Glass</label>
             </div>
 
@@ -719,15 +605,7 @@
 
           <div class="option glass-option disabled">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="glass-style"
-                id="gbg"
-                value="600"
-                data-label="GBG grids"
-                disabled
-              >
-
+              <input type="radio" name="glass-style" id="gbg" value="600" data-label="GBG grids" disabled>
               <label for="gbg">Grids (GBG)</label>
             </div>
 
@@ -736,30 +614,16 @@
 
           <div class="option glass-option disabled">
             <div class="option-copy">
-              <input
-                type="radio"
-                name="glass-style"
-                id="sdl"
-                value="1000"
-                data-label="SDL grids"
-                disabled
-              >
-
+              <input type="radio" name="glass-style" id="sdl" value="1200" data-label="SDL grids" disabled>
               <label for="sdl">SDL</label>
             </div>
 
-            <span class="price">+$1,000</span>
+            <span class="price">+$1,200</span>
           </div>
 
           <div class="option">
             <div class="option-copy">
-              <input
-                type="checkbox"
-                id="peephole"
-                value="250"
-                data-label="Peephole"
-              >
-
+              <input type="checkbox" id="peephole" value="250" data-label="Peephole">
               <label for="peephole">Peephole</label>
             </div>
 
@@ -768,13 +632,7 @@
 
           <div class="option">
             <div class="option-copy">
-              <input
-                type="checkbox"
-                id="dog-door"
-                value="600"
-                data-label="Dog door"
-              >
-
+              <input type="checkbox" id="dog-door" value="600" data-label="Dog door">
               <label for="dog-door">Dog Door</label>
             </div>
 
@@ -783,13 +641,7 @@
 
           <div class="option">
             <div class="option-copy">
-              <input
-                type="checkbox"
-                id="wood-grain"
-                value="1000"
-                data-label="Wood grain"
-              >
-
+              <input type="checkbox" id="wood-grain" value="1000" data-label="Wood grain">
               <label for="wood-grain">Wood Grain</label>
             </div>
 
@@ -798,13 +650,7 @@
 
           <div class="option">
             <div class="option-copy">
-              <input
-                type="checkbox"
-                id="impact"
-                value="0"
-                data-label="Impact rated"
-              >
-
+              <input type="checkbox" id="impact" value="0" data-label="Impact rated">
               <label for="impact">Impact Rated</label>
             </div>
 
@@ -813,17 +659,14 @@
         </div>
 
         <p class="note" id="glass-note">
-          Choose a door containing glass to add decorative, obscure, rain,
-          GBG, or SDL glass.
+          Choose a door containing glass to add decorative, obscure, rain, GBG, or SDL glass.
         </p>
       </section>
     </form>
 
     <aside class="result" aria-live="polite">
       <h2>List Price</h2>
-
       <div class="total-label">Calculated total</div>
-
       <div class="total" id="total">$0</div>
 
       <ul class="breakdown" id="breakdown">
@@ -844,10 +687,7 @@
     const form = document.getElementById("pricer");
     const totalEl = document.getElementById("total");
     const breakdownEl = document.getElementById("breakdown");
-
-    const glassOptions = [
-      ...document.querySelectorAll(".glass-option")
-    ];
+    const glassOptions = [...document.querySelectorAll(".glass-option")];
 
     const money = number =>
       new Intl.NumberFormat("en-US", {
@@ -857,12 +697,8 @@
       }).format(number);
 
     function updateGlassProtection() {
-      const door = form.querySelector(
-        'input[name="door"]:checked'
-      );
-
-      const glassAllowed =
-        door?.dataset.glass === "true";
+      const door = form.querySelector('input[name="door"]:checked');
+      const glassAllowed = door?.dataset.glass === "true";
 
       glassOptions.forEach(row => {
         const input = row.querySelector("input");
@@ -882,13 +718,8 @@
     function calculate() {
       updateGlassProtection();
 
-      const chosen = [
-        ...form.querySelectorAll("input:checked")
-      ];
-
-      const door = form.querySelector(
-        'input[name="door"]:checked'
-      );
+      const chosen = [...form.querySelectorAll("input:checked")];
+      const door = form.querySelector('input[name="door"]:checked');
 
       const fixedItems = chosen.filter(item =>
         item.id !== "impact" &&
