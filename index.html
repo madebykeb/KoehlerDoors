@@ -3,157 +3,948 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Koehler Entry Door Pricer</title>
-  <meta name="description" content="Internal entry door list-price calculator for Koehler Home Improvement.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23003871'/%3E%3Cpath d='M18 52V12h28v40H18Zm6-6h16V18H24v28Zm11-16a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z' fill='white'/%3E%3C/svg%3E">
+
+  <meta
+    name="description"
+    content="Internal entry door list-price calculator for Koehler Home Improvement."
+  >
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23003871'/%3E%3Cpath d='M18 52V12h28v40H18Zm6-6h16V18H24v28Zm11-16a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z' fill='white'/%3E%3C/svg%3E"
+  >
+
   <style>
-    :root { --blue:#003871; --blue2:#07599a; --bright:#2b8bc6; --ink:#142333; --muted:#647586; --paper:#f3f7fb; --line:#d7e2ec; --white:#fff; }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; color:var(--ink); background:linear-gradient(145deg,#edf5fb 0%,#fbfdff 50%,#e3eef7 100%); font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
-    header { background:linear-gradient(110deg,var(--blue),var(--blue2)); color:white; border-bottom:5px solid var(--bright); }
-    .header-inner { max-width:1100px; margin:auto; padding:22px 24px; display:flex; align-items:center; gap:14px; }
-    .mark { width:44px; height:44px; border:2px solid white; border-radius:10px; display:grid; place-items:center; color:white; font-weight:900; font-size:22px; }
-    h1 { margin:0; font-size:clamp(1.35rem,3vw,1.85rem); letter-spacing:-.02em; }
-    header p { margin:2px 0 0; color:#dcecf8; font-size:.9rem; }
-    main { max-width:1100px; margin:auto; padding:28px 24px 50px; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr); gap:24px; align-items:start; }
-    .card { background:var(--white); border:1px solid var(--line); border-radius:18px; box-shadow:0 16px 40px rgba(0,56,113,.09); overflow:hidden; }
-    .section { padding:24px; border-bottom:1px solid var(--line); }
-    .section:last-child { border-bottom:0; }
-    h2 { margin:0 0 16px; font-size:1rem; text-transform:uppercase; letter-spacing:.08em; color:var(--blue2); }
-    .door-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    .choice { position:relative; }
-    .choice input { position:absolute; opacity:0; pointer-events:none; }
-    .choice label { display:block; min-height:95px; padding:16px; border:2px solid var(--line); border-radius:13px; cursor:pointer; transition:.15s; }
-    .choice label:hover { border-color:#9eb5a3; }
-    .choice input:focus-visible + label { outline:3px solid rgba(242,189,49,.45); outline-offset:2px; }
-    .choice input:checked + label { border-color:var(--blue); background:#edf6fc; box-shadow:inset 0 0 0 1px var(--blue); }
-    .choice strong { display:block; font-size:1rem; }
-    .choice span { display:block; margin-top:6px; color:var(--muted); font-weight:700; }
-    .options { display:grid; gap:0; }
-    .size-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
-    .size-grid + h2 { margin-top:24px; }
-    .size-choice input { position:absolute; opacity:0; pointer-events:none; }
-    .size-choice label { display:flex; justify-content:space-between; gap:8px; padding:12px; border:2px solid var(--line); border-radius:11px; cursor:pointer; font-weight:750; }
-    .size-choice input:checked + label { border-color:var(--blue); background:#edf6fc; }
-    .size-choice small { color:var(--muted); font-size:.78rem; }
-    .option { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:57px; border-bottom:1px solid #edf1ed; }
-    .option:last-child { border:0; }
-    .option-copy { display:flex; align-items:center; gap:11px; }
-    .option input { width:20px; height:20px; accent-color:var(--blue); }
-    .option label { font-weight:650; cursor:pointer; }
-    .price { color:var(--blue2); font-weight:800; white-space:nowrap; }
-    .disabled { opacity:.45; }
-    .note { display:none; margin:12px 0 0; padding:10px 12px; background:#fff8e5; border:1px solid #ecd58d; border-radius:10px; color:#725c19; font-size:.9rem; }
-    .result { position:sticky; top:20px; background:linear-gradient(150deg,var(--blue),#052d53); color:white; border-radius:18px; padding:25px; box-shadow:0 18px 40px rgba(0,56,113,.24); }
-    .result h2 { color:#8fd1fa; margin-bottom:5px; }
-    .total-label { color:#dbe5dd; font-size:.9rem; }
-    .total { margin:1px 0 20px; font-size:clamp(2.6rem,6vw,4rem); line-height:1; letter-spacing:-.05em; font-weight:900; }
-    .breakdown { margin:0; padding:0; list-style:none; border-top:1px solid rgba(255,255,255,.18); }
-    .breakdown li { padding:11px 0; display:flex; justify-content:space-between; gap:14px; border-bottom:1px solid rgba(255,255,255,.12); font-size:.94rem; }
-    .breakdown li span:last-child { font-weight:750; white-space:nowrap; }
-    .empty { color:#c9d7cd; padding:16px 0; }
-    .reset { width:100%; margin-top:18px; padding:12px 16px; border:1px solid rgba(255,255,255,.3); border-radius:10px; background:transparent; color:white; font:inherit; font-weight:750; cursor:pointer; }
-    .reset:hover { background:rgba(255,255,255,.08); }
-    .fine { margin:14px 0 0; color:#c9d7cd; font-size:.78rem; }
-    @media (max-width:760px) { main { grid-template-columns:1fr; padding:18px 14px 35px; } .result { position:static; grid-row:1; } .door-grid { grid-template-columns:1fr; } .choice label { min-height:0; } .size-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .header-inner { padding:17px 16px; } .section { padding:19px; } }
+    :root {
+      --blue: #003871;
+      --blue2: #07599a;
+      --bright: #2b8bc6;
+      --ink: #142333;
+      --muted: #647586;
+      --paper: #f3f7fb;
+      --line: #d7e2ec;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: linear-gradient(
+        145deg,
+        #edf5fb 0%,
+        #fbfdff 50%,
+        #e3eef7 100%
+      );
+      font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    header {
+      color: white;
+      background: linear-gradient(110deg, var(--blue), var(--blue2));
+      border-bottom: 5px solid var(--bright);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      max-width: 1100px;
+      margin: auto;
+      padding: 22px 24px;
+      gap: 14px;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      color: white;
+      border: 2px solid white;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      margin: 2px 0 0;
+      color: #dcecf8;
+      font-size: 0.9rem;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      align-items: start;
+      max-width: 1100px;
+      margin: auto;
+      padding: 28px 24px 50px;
+      gap: 24px;
+    }
+
+    .card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0, 56, 113, 0.09);
+    }
+
+    .section {
+      padding: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child {
+      border-bottom: 0;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      color: var(--blue2);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .door-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .choice {
+      position: relative;
+    }
+
+    .choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .choice label {
+      display: block;
+      min-height: 95px;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .choice label:hover {
+      border-color: #9eb5c5;
+    }
+
+    .choice input:focus-visible + label {
+      outline: 3px solid rgba(43, 139, 198, 0.35);
+      outline-offset: 2px;
+    }
+
+    .choice input:checked + label {
+      background: #edf6fc;
+      border-color: var(--blue);
+      box-shadow: inset 0 0 0 1px var(--blue);
+    }
+
+    .choice strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .choice span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .size-grid + h2 {
+      margin-top: 24px;
+    }
+
+    .size-choice {
+      position: relative;
+    }
+
+    .size-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .size-choice label {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border: 2px solid var(--line);
+      border-radius: 11px;
+      font-weight: 750;
+      cursor: pointer;
+      gap: 8px;
+    }
+
+    .size-choice input:focus-visible + label {
+      outline: 3px solid rgba(43, 139, 198, 0.35);
+      outline-offset: 2px;
+    }
+
+    .size-choice input:checked + label {
+      background: #edf6fc;
+      border-color: var(--blue);
+    }
+
+    .size-choice small {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .options {
+      display: grid;
+      gap: 0;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 57px;
+      border-bottom: 1px solid #edf1f5;
+      gap: 16px;
+    }
+
+    .option:last-child {
+      border: 0;
+    }
+
+    .option-copy {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .option input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--blue);
+    }
+
+    .option label {
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .price {
+      color: var(--blue2);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .disabled {
+      opacity: 0.45;
+    }
+
+    .note {
+      display: none;
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      color: #725c19;
+      background: #fff8e5;
+      border: 1px solid #ecd58d;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .result {
+      position: sticky;
+      top: 20px;
+      padding: 25px;
+      color: white;
+      background: linear-gradient(150deg, var(--blue), #052d53);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0, 56, 113, 0.24);
+    }
+
+    .result h2 {
+      margin-bottom: 5px;
+      color: #8fd1fa;
+    }
+
+    .total-label {
+      color: #dbe8f2;
+      font-size: 0.9rem;
+    }
+
+    .total {
+      margin: 1px 0 20px;
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .breakdown {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      list-style: none;
+    }
+
+    .breakdown li {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.94rem;
+      gap: 14px;
+    }
+
+    .breakdown li span:last-child {
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .empty {
+      padding: 16px 0;
+      color: #c9d7e2;
+    }
+
+    .reset {
+      width: 100%;
+      margin-top: 18px;
+      padding: 12px 16px;
+      color: white;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .reset:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .fine {
+      margin: 14px 0 0;
+      color: #c9d7e2;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 18px 14px 35px;
+      }
+
+      .result {
+        position: static;
+        grid-row: 1;
+      }
+
+      .door-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .choice label {
+        min-height: 0;
+      }
+
+      .size-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .header-inner {
+        padding: 17px 16px;
+      }
+
+      .section {
+        padding: 19px;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <header><div class="header-inner"><div class="mark">K</div><div><h1>Koehler Entry Door Pricer</h1><p>Internal list-price calculator</p></div></div></header>
+  <header>
+    <div class="header-inner">
+      <div class="mark">K</div>
+
+      <div>
+        <h1>Koehler Entry Door Pricer</h1>
+        <p>Internal list-price calculator</p>
+      </div>
+    </div>
+  </header>
+
   <main>
     <form class="card" id="pricer">
       <section class="section">
         <h2>1. Choose the base door</h2>
+
         <div class="door-grid">
-          <div class="choice"><input type="radio" name="door" id="single-panel" value="2850" data-label="Single 6-panel door"><label for="single-panel"><strong>Single 6-Panel Door</strong><span>$2,850</span></label></div>
-          <div class="choice"><input type="radio" name="door" id="double-panel" value="4700" data-label="Double 6-panel door"><label for="double-panel"><strong>Double 6-Panel Door</strong><span>$4,700</span></label></div>
-          <div class="choice"><input type="radio" name="door" id="single-lite" value="3300" data-label="Single full, half or ¾-lite door" data-glass="true"><label for="single-lite"><strong>Single Full / Half / ¾-Lite</strong><span>$3,300</span></label></div>
-          <div class="choice"><input type="radio" name="door" id="double-lite" value="5600" data-label="Double full, half or ¾-lite door" data-glass="true"><label for="double-lite"><strong>Double Full / Half / ¾-Lite</strong><span>$5,600</span></label></div>
+          <div class="choice">
+            <input
+              type="radio"
+              name="door"
+              id="single-panel"
+              value="2850"
+              data-label="Single 6-panel door"
+            >
+
+            <label for="single-panel">
+              <strong>Single 6-Panel Door</strong>
+              <span>$2,850</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input
+              type="radio"
+              name="door"
+              id="double-panel"
+              value="4700"
+              data-label="Double 6-panel door"
+            >
+
+            <label for="double-panel">
+              <strong>Double 6-Panel Door</strong>
+              <span>$4,700</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input
+              type="radio"
+              name="door"
+              id="single-lite"
+              value="3300"
+              data-label="Single full, half or ¾-lite door"
+              data-glass="true"
+            >
+
+            <label for="single-lite">
+              <strong>Single Full / Half / ¾-Lite</strong>
+              <span>$3,300</span>
+            </label>
+          </div>
+
+          <div class="choice">
+            <input
+              type="radio"
+              name="door"
+              id="double-lite"
+              value="5600"
+              data-label="Double full, half or ¾-lite door"
+              data-glass="true"
+            >
+
+            <label for="double-lite">
+              <strong>Double Full / Half / ¾-Lite</strong>
+              <span>$5,600</span>
+            </label>
+          </div>
         </div>
       </section>
+
       <section class="section">
         <h2>2. Choose the width</h2>
+
         <div class="size-grid">
-          <div class="size-choice"><input type="radio" name="width" id="w36" value="1000" data-label="3′6″ width"><label for="w36"><span>3′6″</span><small>+$1,000</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w30" value="0" data-label="3′0″ width" checked><label for="w30"><span>3′0″</span><small>Base</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w210" value="1000" data-label="2′10″ width"><label for="w210"><span>2′10″</span><small>+$1,000</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w28" value="500" data-label="2′8″ width"><label for="w28"><span>2′8″</span><small>+$500</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w26" value="500" data-label="2′6″ width"><label for="w26"><span>2′6″</span><small>+$500</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w24" value="500" data-label="2′4″ width"><label for="w24"><span>2′4″</span><small>+$500</small></label></div>
-          <div class="size-choice"><input type="radio" name="width" id="w20" value="1000" data-label="2′0″ width"><label for="w20"><span>2′0″</span><small>+$1,000</small></label></div>
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w36"
+              value="1000"
+              data-label="3′6″ width"
+            >
+
+            <label for="w36">
+              <span>3′6″</span>
+              <small>+$1,000</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w30"
+              value="0"
+              data-label="3′0″ width"
+              checked
+            >
+
+            <label for="w30">
+              <span>3′0″</span>
+              <small>Base</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w210"
+              value="1000"
+              data-label="2′10″ width"
+            >
+
+            <label for="w210">
+              <span>2′10″</span>
+              <small>+$1,000</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w28"
+              value="500"
+              data-label="2′8″ width"
+            >
+
+            <label for="w28">
+              <span>2′8″</span>
+              <small>+$500</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w26"
+              value="500"
+              data-label="2′6″ width"
+            >
+
+            <label for="w26">
+              <span>2′6″</span>
+              <small>+$500</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w24"
+              value="500"
+              data-label="2′4″ width"
+            >
+
+            <label for="w24">
+              <span>2′4″</span>
+              <small>+$500</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="width"
+              id="w20"
+              value="1000"
+              data-label="2′0″ width"
+            >
+
+            <label for="w20">
+              <span>2′0″</span>
+              <small>+$1,000</small>
+            </label>
+          </div>
         </div>
+
         <h2>3. Choose the height</h2>
+
         <div class="size-grid">
-          <div class="size-choice"><input type="radio" name="height" id="h68" value="0" data-label="6′8″ height" checked><label for="h68"><span>6′8″</span><small>Base</small></label></div>
-          <div class="size-choice"><input type="radio" name="height" id="h80" value="2000" data-label="8′0″ height"><label for="h80"><span>8′0″</span><small>+$2,000</small></label></div>
-          <div class="size-choice"><input type="radio" name="height" id="cut-down" value="1000" data-label="Cut-down height"><label for="cut-down"><span>Cut Down</span><small>+$1,000</small></label></div>
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="height"
+              id="h68"
+              value="0"
+              data-label="6′8″ height"
+              checked
+            >
+
+            <label for="h68">
+              <span>6′8″</span>
+              <small>Base</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="height"
+              id="h80"
+              value="2000"
+              data-label="8′0″ height"
+            >
+
+            <label for="h80">
+              <span>8′0″</span>
+              <small>+$2,000</small>
+            </label>
+          </div>
+
+          <div class="size-choice">
+            <input
+              type="radio"
+              name="height"
+              id="cut-down"
+              value="1000"
+              data-label="Cut-down height"
+            >
+
+            <label for="cut-down">
+              <span>Cut Down</span>
+              <small>+$1,000</small>
+            </label>
+          </div>
         </div>
       </section>
+
       <section class="section">
         <h2>4. Add options</h2>
+
         <div class="options">
-          <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="one-sidelite" value="1000" data-label="One sidelite"><label for="one-sidelite">One Sidelite</label></div><span class="price">+$1,000</span></div>
-          <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="two-sidelites" value="1800" data-label="Two sidelites"><label for="two-sidelites">Two Sidelites</label></div><span class="price">+$1,800</span></div>
-          <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="decorative" value="2500" data-label="Decorative glass" disabled><label for="decorative">Decorative Glass</label></div><span class="price">+$2,500</span></div>
-          <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="gbg" value="600" data-label="GBG grids" disabled><label for="gbg">Grids (GBG)</label></div><span class="price">+$600</span></div>
-          <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="sdl" value="1000" data-label="SDL grids" disabled><label for="sdl">SDL</label></div><span class="price">+$1,000</span></div>
-          <div class="option"><div class="option-copy"><input type="checkbox" id="peephole" value="250" data-label="Peephole"><label for="peephole">Peephole</label></div><span class="price">+$250</span></div>
-          <div class="option"><div class="option-copy"><input type="checkbox" id="dog-door" value="600" data-label="Dog door"><label for="dog-door">Dog Door</label></div><span class="price">+$600</span></div>
-          <div class="option"><div class="option-copy"><input type="checkbox" id="wood-grain" value="1000" data-label="Wood grain"><label for="wood-grain">Wood Grain</label></div><span class="price">+$1,000</span></div>
-          <div class="option"><div class="option-copy"><input type="checkbox" id="impact" value="0" data-label="Impact rated"><label for="impact">Impact Rated</label></div><span class="price">+40%</span></div>
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="sidelite"
+                id="one-sidelite"
+                value="1200"
+                data-label="One sidelite"
+              >
+
+              <label for="one-sidelite">One Sidelite</label>
+            </div>
+
+            <span class="price">+$1,200</span>
+          </div>
+
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="sidelite"
+                id="two-sidelites"
+                value="2400"
+                data-label="Two sidelites"
+              >
+
+              <label for="two-sidelites">Two Sidelites</label>
+            </div>
+
+            <span class="price">+$2,400</span>
+          </div>
+
+          <div class="option glass-option disabled">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="glass-style"
+                id="decorative"
+                value="2500"
+                data-label="Decorative glass"
+                disabled
+              >
+
+              <label for="decorative">Decorative Glass</label>
+            </div>
+
+            <span class="price">+$2,500</span>
+          </div>
+
+          <div class="option glass-option disabled">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="glass-style"
+                id="obscure"
+                value="1000"
+                data-label="Obscure glass"
+                disabled
+              >
+
+              <label for="obscure">Obscure Glass</label>
+            </div>
+
+            <span class="price">+$1,000</span>
+          </div>
+
+          <div class="option glass-option disabled">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="glass-style"
+                id="rain"
+                value="1200"
+                data-label="Rain glass"
+                disabled
+              >
+
+              <label for="rain">Rain Glass</label>
+            </div>
+
+            <span class="price">+$1,200</span>
+          </div>
+
+          <div class="option glass-option disabled">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="glass-style"
+                id="gbg"
+                value="600"
+                data-label="GBG grids"
+                disabled
+              >
+
+              <label for="gbg">Grids (GBG)</label>
+            </div>
+
+            <span class="price">+$600</span>
+          </div>
+
+          <div class="option glass-option disabled">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="glass-style"
+                id="sdl"
+                value="1000"
+                data-label="SDL grids"
+                disabled
+              >
+
+              <label for="sdl">SDL</label>
+            </div>
+
+            <span class="price">+$1,000</span>
+          </div>
+
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="checkbox"
+                id="peephole"
+                value="250"
+                data-label="Peephole"
+              >
+
+              <label for="peephole">Peephole</label>
+            </div>
+
+            <span class="price">+$250</span>
+          </div>
+
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="checkbox"
+                id="dog-door"
+                value="600"
+                data-label="Dog door"
+              >
+
+              <label for="dog-door">Dog Door</label>
+            </div>
+
+            <span class="price">+$600</span>
+          </div>
+
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="checkbox"
+                id="wood-grain"
+                value="1000"
+                data-label="Wood grain"
+              >
+
+              <label for="wood-grain">Wood Grain</label>
+            </div>
+
+            <span class="price">+$1,000</span>
+          </div>
+
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="checkbox"
+                id="impact"
+                value="0"
+                data-label="Impact rated"
+              >
+
+              <label for="impact">Impact Rated</label>
+            </div>
+
+            <span class="price">+40%</span>
+          </div>
         </div>
-        <p class="note" id="glass-note">Choose a door containing glass to add decorative glass, GBG, or SDL.</p>
+
+        <p class="note" id="glass-note">
+          Choose a door containing glass to add decorative, obscure, rain,
+          GBG, or SDL glass.
+        </p>
       </section>
     </form>
+
     <aside class="result" aria-live="polite">
       <h2>List Price</h2>
+
       <div class="total-label">Calculated total</div>
+
       <div class="total" id="total">$0</div>
-      <ul class="breakdown" id="breakdown"><li class="empty">Choose a base door to begin.</li></ul>
-      <button class="reset" type="button" id="reset">Clear Calculator</button>
-      <p class="fine">List-price estimate for internal Koehler use.</p>
+
+      <ul class="breakdown" id="breakdown">
+        <li class="empty">Choose a base door to begin.</li>
+      </ul>
+
+      <button class="reset" type="button" id="reset">
+        Clear Calculator
+      </button>
+
+      <p class="fine">
+        List-price estimate for internal Koehler use.
+      </p>
     </aside>
   </main>
+
   <script>
-    const form = document.getElementById('pricer');
-    const totalEl = document.getElementById('total');
-    const breakdownEl = document.getElementById('breakdown');
-    const glassOptions = [...document.querySelectorAll('.glass-option')];
-    const money = n => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
+    const form = document.getElementById("pricer");
+    const totalEl = document.getElementById("total");
+    const breakdownEl = document.getElementById("breakdown");
+
+    const glassOptions = [
+      ...document.querySelectorAll(".glass-option")
+    ];
+
+    const money = number =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(number);
 
     function updateGlassProtection() {
-      const door = form.querySelector('input[name="door"]:checked');
-      const allowed = door?.dataset.glass === 'true';
+      const door = form.querySelector(
+        'input[name="door"]:checked'
+      );
+
+      const glassAllowed =
+        door?.dataset.glass === "true";
+
       glassOptions.forEach(row => {
-        const input = row.querySelector('input');
-        input.disabled = !allowed;
-        row.classList.toggle('disabled', !allowed);
-        if (!allowed) input.checked = false;
+        const input = row.querySelector("input");
+
+        input.disabled = !glassAllowed;
+        row.classList.toggle("disabled", !glassAllowed);
+
+        if (!glassAllowed) {
+          input.checked = false;
+        }
       });
-      document.getElementById('glass-note').style.display = door && !allowed ? 'block' : 'none';
+
+      document.getElementById("glass-note").style.display =
+        door && !glassAllowed ? "block" : "none";
     }
 
     function calculate() {
       updateGlassProtection();
-      const chosen = [...form.querySelectorAll('input:checked')];
-      const door = form.querySelector('input[name="door"]:checked');
-      const fixedItems = chosen.filter(item => item.id !== 'impact' && Number(item.value) !== 0);
-      const subtotal = fixedItems.reduce((sum,item) => sum + Number(item.value), 0);
-      const impactSelected = document.getElementById('impact').checked;
-      const impactAmount = impactSelected ? subtotal * .40 : 0;
+
+      const chosen = [
+        ...form.querySelectorAll("input:checked")
+      ];
+
+      const door = form.querySelector(
+        'input[name="door"]:checked'
+      );
+
+      const fixedItems = chosen.filter(item =>
+        item.id !== "impact" &&
+        Number(item.value) !== 0
+      );
+
+      const subtotal = fixedItems.reduce(
+        (sum, item) => sum + Number(item.value),
+        0
+      );
+
+      const impactSelected =
+        document.getElementById("impact").checked;
+
+      const impactAmount =
+        impactSelected ? subtotal * 0.40 : 0;
+
       const total = subtotal + impactAmount;
+
       totalEl.textContent = money(total);
+
       if (!door) {
-        breakdownEl.innerHTML = '<li class="empty">Choose a base door to begin.</li>';
+        breakdownEl.innerHTML =
+          '<li class="empty">Choose a base door to begin.</li>';
+
         return;
       }
-      const lines = fixedItems.map(item => `<li><span>${item.dataset.label}</span><span>${money(Number(item.value))}</span></li>`);
-      if (impactSelected) lines.push(`<li><span>Impact rated (40%)</span><span>${money(impactAmount)}</span></li>`);
-      breakdownEl.innerHTML = lines.join('');
+
+      const lines = fixedItems.map(item => `
+        <li>
+          <span>${item.dataset.label}</span>
+          <span>${money(Number(item.value))}</span>
+        </li>
+      `);
+
+      if (impactSelected) {
+        lines.push(`
+          <li>
+            <span>Impact rated (40%)</span>
+            <span>${money(impactAmount)}</span>
+          </li>
+        `);
+      }
+
+      breakdownEl.innerHTML = lines.join("");
     }
 
-    form.addEventListener('change', calculate);
-    document.getElementById('reset').addEventListener('click', () => { form.reset(); calculate(); });
+    form.addEventListener("change", calculate);
+
+    document
+      .getElementById("reset")
+      .addEventListener("click", () => {
+        form.reset();
+        calculate();
+      });
+
     calculate();
   </script>
 </body>
