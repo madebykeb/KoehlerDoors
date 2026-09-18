@@ -3,13 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Koehler Entry Door Pricer</title>
-
-  <meta
-    name="description"
-    content="Internal entry door list-price calculator for Koehler Home Improvement."
-  >
+  <meta name="description" content="Internal entry door list-price calculator for Koehler Home Improvement.">
 
   <link
     rel="icon"
@@ -151,7 +146,7 @@
     }
 
     .choice label:hover {
-      border-color: #9eb5a3;
+      border-color: #8eb4d1;
     }
 
     .choice input:focus-visible + label {
@@ -290,6 +285,86 @@
       font: inherit;
     }
 
+    .style-section {
+      display: none;
+    }
+
+    .style-intro {
+      margin: -7px 0 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .style-choice {
+      position: relative;
+    }
+
+    .style-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .style-choice label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 188px;
+      padding: 10px 8px 9px;
+      background: white;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .style-choice label:hover {
+      border-color: #8eb4d1;
+      transform: translateY(-1px);
+    }
+
+    .style-choice input:checked + label {
+      background: #edf6fc;
+      border-color: var(--blue);
+      box-shadow: inset 0 0 0 1px var(--blue);
+    }
+
+    .style-choice img {
+      width: 100%;
+      height: 135px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+    }
+
+    .style-choice strong {
+      color: var(--blue);
+      font-size: 0.86rem;
+      letter-spacing: 0.02em;
+    }
+
+    .style-empty {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 16px;
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px dashed #aabccc;
+      border-radius: 11px;
+    }
+
+    .style-height-note {
+      margin: 13px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
     .disabled {
       opacity: 0.45;
     }
@@ -376,6 +451,31 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
+    .copy-notes {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px 16px;
+      color: var(--blue);
+      background: white;
+      border: 1px solid white;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .copy-notes:hover {
+      background: #eaf5fc;
+    }
+
+    .copy-status {
+      min-height: 1.2em;
+      margin: 8px 0 0;
+      color: #a9defc;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
     .fine {
       margin: 14px 0 0;
       color: #c9d7cd;
@@ -405,6 +505,18 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .style-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .style-choice label {
+        min-height: 158px;
+      }
+
+      .style-choice img {
+        height: 108px;
+      }
+
       .header-inner {
         padding: 17px 16px;
       }
@@ -415,6 +527,12 @@
 
       .section {
         padding: 19px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .style-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
   </style>
@@ -608,10 +726,43 @@
         </div>
       </section>
 
+      <section class="section style-section" id="door-style-section">
+        <h2>4. Choose the door style</h2>
+
+        <p class="style-intro">
+          Select any catalog configuration by picture and model code.
+          Every listed style is included in the base door price.
+        </p>
+
+        <div class="style-grid" id="style-grid"></div>
+
+        <p class="style-height-note">
+          Catalog availability can vary by glass design, material, width and
+          impact rating. Confirm the final model before ordering.
+        </p>
+      </section>
+
       <section class="section">
-        <h2>4. Add options</h2>
+        <h2>5. Add options</h2>
 
         <div class="options">
+          <div class="option">
+            <div class="option-copy">
+              <input
+                type="radio"
+                name="sidelite"
+                id="no-sidelites"
+                value="0"
+                data-label="No sidelites"
+                checked
+              >
+
+              <label for="no-sidelites">No Sidelites</label>
+            </div>
+
+            <span class="price">Included</span>
+          </div>
+
           <div class="option">
             <div class="option-copy">
               <input
@@ -940,6 +1091,16 @@
         Clear Calculator
       </button>
 
+      <button class="copy-notes" type="button" id="copy-notes">
+        Copy Quote Notes
+      </button>
+
+      <p
+        class="copy-status"
+        id="copy-status"
+        aria-live="polite"
+      ></p>
+
       <p class="fine">
         List-price estimate for internal Koehler use.
       </p>
@@ -962,6 +1123,38 @@
         maximumFractionDigits: 0
       }).format(number);
 
+    const styleCatalog = [
+      ["228-4", "68"],
+      ["137-4", "68"],
+      ["135-4", "68"],
+      ["217-2", "68"],
+      ["160-2", "68"],
+      ["106-1", "68"],
+      ["106-1P", "68"],
+      ["106-2", "68"],
+      ["126-1", "68"],
+      ["304-2", "68"],
+      ["420-1", "68"],
+      ["404-1", "68"],
+      ["426-1", "68"],
+      ["300-X", "68"],
+      ["120-X", "68"],
+      ["122-X", "68"],
+      ["926-X", "68"],
+
+      ["217-2", "80"],
+      ["404-1", "80"],
+      ["404-1P", "80"],
+      ["404-2", "80"],
+      ["120-1", "80"],
+      ["122-1", "80"],
+      ["122-2", "80"],
+      ["926-1", "80"],
+      ["820-X", "80"],
+      ["810-X", "80"],
+      ["826-X", "80"]
+    ];
+
     function updateGlassProtection() {
       const door = form.querySelector(
         'input[name="door"]:checked'
@@ -981,12 +1174,108 @@
         }
       });
 
+      const styleSection =
+        document.getElementById("door-style-section");
+
+      styleSection.style.display =
+        glassAllowed ? "block" : "none";
+
+      styleSection
+        .querySelectorAll("input")
+        .forEach(input => {
+          input.disabled = !glassAllowed;
+
+          if (!glassAllowed) {
+            input.checked = false;
+          }
+        });
+
       document.getElementById("glass-note").style.display =
         door && !glassAllowed ? "block" : "none";
     }
 
+    function updateDoorStyles() {
+      const height = form.querySelector(
+        'input[name="height"]:checked'
+      )?.id;
+
+      const wanted =
+        height === "h80" ? "80" : "68";
+
+      const current = form.querySelector(
+        'input[name="door-style"]:checked'
+      )?.dataset.code;
+
+      const styles = styleCatalog.filter(
+        ([, styleHeight]) => styleHeight === wanted
+      );
+
+      const grid =
+        document.getElementById("style-grid");
+
+      if (!styles.length) {
+        grid.innerHTML = `
+          <p class="style-empty">
+            No catalog styles are shown for this height.
+          </p>
+        `;
+
+        return;
+      }
+
+      grid.innerHTML = styles
+        .map(([code, styleHeight]) => {
+          const suffix =
+            styleHeight === "80" &&
+            ["217-2", "404-1"].includes(code)
+              ? "-80"
+              : "";
+
+          const id =
+            `style-${code
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")}-${styleHeight}`;
+
+          const checked =
+            current === code ? " checked" : "";
+
+          const imageUrl =
+            "https://koehler-door-pricer.kebpound.chatgpt.site/" +
+            `assets/door-styles/${code}${suffix}.png`;
+
+          const heightLabel =
+            styleHeight === "80" ? "8′0″" : "6′8″";
+
+          return `
+            <div class="style-choice">
+              <input
+                type="radio"
+                name="door-style"
+                id="${id}"
+                value="${code}"
+                data-code="${code}"
+                ${checked}
+              >
+
+              <label for="${id}">
+                <img
+                  src="${imageUrl}"
+                  alt="Door style ${code}"
+                >
+
+                <strong>
+                  ${code} · ${heightLabel}
+                </strong>
+              </label>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
     function calculate() {
       updateGlassProtection();
+      updateDoorStyles();
 
       const chosen = [
         ...form.querySelectorAll("input:checked")
@@ -1000,11 +1289,14 @@
         door?.id === "double-panel" ||
         door?.id === "double-lite";
 
-      const itemPrice = item =>
-        item.dataset.singlePrice
+      const itemPrice = item => {
+        const amount = item.dataset.singlePrice
           ? Number(item.dataset.singlePrice) *
             (isDouble ? 2 : 1)
           : Number(item.value);
+
+        return Number.isFinite(amount) ? amount : 0;
+      };
 
       document
         .querySelectorAll("[data-single-price]")
@@ -1016,6 +1308,7 @@
         });
 
       const fixedItems = chosen.filter(item =>
+        item.name !== "door-style" &&
         item.id !== "impact" &&
         itemPrice(item) !== 0
       );
@@ -1031,13 +1324,18 @@
       const impactAmount =
         impactSelected ? subtotal * 0.40 : 0;
 
-      const total = subtotal + impactAmount;
-
-      const decorativeSelected =
-        document.getElementById("decorative").checked;
+      const total =
+        subtotal + impactAmount;
 
       const design =
         document.getElementById("decorative-design");
+
+      const doorStyle = form.querySelector(
+        'input[name="door-style"]:checked'
+      );
+
+      const decorativeSelected =
+        document.getElementById("decorative").checked;
 
       document
         .getElementById("decorative-design-wrap")
@@ -1060,6 +1358,24 @@
         </li>
       `);
 
+      if (doorStyle) {
+        lines.push(`
+          <li>
+            <span>Door style: ${doorStyle.value}</span>
+            <span>Included</span>
+          </li>
+        `);
+      }
+
+      if (document.getElementById("no-sidelites").checked) {
+        lines.push(`
+          <li>
+            <span>Sidelites: None</span>
+            <span>Included</span>
+          </li>
+        `);
+      }
+
       if (decorativeSelected && design.value) {
         lines.push(`
           <li>
@@ -1081,14 +1397,156 @@
       breakdownEl.innerHTML = lines.join("");
     }
 
+    function buildQuoteNotes() {
+      const door = form.querySelector(
+        'input[name="door"]:checked'
+      );
+
+      if (!door) {
+        return "";
+      }
+
+      const width = form.querySelector(
+        'input[name="width"]:checked'
+      );
+
+      const height = form.querySelector(
+        'input[name="height"]:checked'
+      );
+
+      const doorStyle = form.querySelector(
+        'input[name="door-style"]:checked'
+      );
+
+      const sidelite = form.querySelector(
+        'input[name="sidelite"]:checked'
+      );
+
+      const glass = form.querySelector(
+        'input[name="glass-style"]:checked'
+      );
+
+      const finish = form.querySelector(
+        'input[name="finish"]:checked'
+      );
+
+      const selectedOptions = [
+        "peephole",
+        "dog-door",
+        "wood-grain"
+      ]
+        .map(id => document.getElementById(id))
+        .filter(item => item.checked)
+        .map(item => item.dataset.label);
+
+      const lines = [
+        "Entry Door Specifications",
+        `Door: ${door.dataset.label}`,
+        `Width: ${width.dataset.label}`,
+        `Height: ${height.dataset.label}`
+      ];
+
+      if (doorStyle) {
+        lines.push(`Door Style: ${doorStyle.value}`);
+      }
+
+      if (sidelite) {
+        lines.push(`Sidelites: ${sidelite.dataset.label}`);
+      }
+
+      if (glass) {
+        let glassText = glass.dataset.label;
+
+        const design =
+          document.getElementById("decorative-design").value;
+
+        if (glass.id === "decorative" && design) {
+          glassText += ` - ${design}`;
+        }
+
+        lines.push(`Glass: ${glassText}`);
+      }
+
+      if (selectedOptions.length) {
+        lines.push(
+          `Options: ${selectedOptions.join(", ")}`
+        );
+      }
+
+      if (finish) {
+        lines.push(`Finish: ${finish.dataset.label}`);
+      }
+
+      lines.push(
+        `Impact Rated: ${
+          document.getElementById("impact").checked
+            ? "Yes"
+            : "No"
+        }`
+      );
+
+      return lines.join("\n");
+    }
+
+    async function copyQuoteNotes() {
+      const status =
+        document.getElementById("copy-status");
+
+      const notes =
+        buildQuoteNotes();
+
+      if (!notes) {
+        status.textContent =
+          "Choose a base door first.";
+
+        return;
+      }
+
+      try {
+        if (
+          navigator.clipboard &&
+          window.isSecureContext
+        ) {
+          await navigator.clipboard.writeText(notes);
+        } else {
+          const area =
+            document.createElement("textarea");
+
+          area.value = notes;
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+
+        status.textContent =
+          "Quote notes copied — no prices included.";
+      } catch {
+        status.textContent =
+          "Unable to copy. Please try again.";
+      }
+    }
+
     form.addEventListener("change", calculate);
 
     document
       .getElementById("reset")
       .addEventListener("click", () => {
         form.reset();
+
+        document
+          .getElementById("copy-status")
+          .textContent = "";
+
         calculate();
       });
+
+    document
+      .getElementById("copy-notes")
+      .addEventListener("click", copyQuoteNotes);
 
     calculate();
   </script>
