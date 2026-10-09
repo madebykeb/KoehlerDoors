@@ -106,7 +106,7 @@
 
     [hidden] {display:none!important}
     .preview-box {background:#f3f7fb;color:var(--ink);border-radius:12px;padding:14px;margin-bottom:18px}
-    #door-preview svg {width:100%;height:280px;display:block}
+    #door-preview > svg {width:100%;height:280px;display:block}
     .preview-caption {font-size:.78rem;color:#526579;margin:8px 0}
     .catalog-reference {display:flex;gap:12px;align-items:center;margin-top:10px}
     .catalog-reference img {width:70px;height:110px;object-fit:contain}
@@ -124,8 +124,8 @@
       .print-head img {width:135px;max-height:55px;object-fit:contain}
       #order-sheet h1 {font-size:21px;color:#003871}
       .print-layout {display:grid;grid-template-columns:220px 1fr;gap:20px}
-      .print-layout svg {width:210px;height:290px}
-      .print-table {width:100%;border-collapse:collapse}
+      .print-layout > div > svg {width:210px;height:290px}
+      .print-table {width:100%;border-collapse:collapse;line-height:1.25}
       .print-table th,.print-table td {padding:3px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top;overflow-wrap:anywhere}
       .print-table th {width:36%}
       .print-table tr {break-inside:avoid}
@@ -142,7 +142,7 @@
     .preview-heading h2 {color:#193e33;font-size:17px;letter-spacing:-.02em;text-transform:none;margin:2px 0 0}
     .view-control {display:flex;align-items:center;gap:7px;font-size:11px;color:#566a60}
     .view-control select {font:inherit;padding:7px;border:1px solid #cad5ce;border-radius:6px;color:#25473a;background:white}
-    #door-preview svg {width:100%;height:auto;display:block;border-radius:0}
+    #door-preview > svg {width:100%;height:auto;display:block;border-radius:0}
     .preview-empty {min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:30px;background:#ecefe9;color:#284739}
     .preview-empty span {font-size:13px;color:#6c7b72;max-width:260px}
     .empty-door-icon {font-size:80px;line-height:1;color:#6b8978}
@@ -167,7 +167,7 @@
     .catalog-reference {margin:0}
     @media(max-width:900px) { main {grid-template-columns:minmax(0,1fr) minmax(340px,.9fr);padding:20px 16px;gap:16px}.result {padding:16px} }
     @media(max-width:760px) { main {grid-template-columns:1fr}.result {max-height:none;overflow:visible;position:static} }
-    @media print { .print-layout {grid-template-columns:255px 1fr;gap:16px}.print-layout svg {width:255px;height:auto}.print-layout p {font-size:9px;color:#555}.print-head h1 {font-size:19px} }
+    @media print { .print-layout {grid-template-columns:255px 1fr;gap:16px}.print-layout > div > svg {width:255px;height:auto}.print-layout p {font-size:9px;color:#555}.print-head h1 {font-size:19px} }
 
     .finish-toggle-row {display:flex;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap}
     .finish-toggle {display:flex;gap:3px;background:#eaf1f5;padding:4px;border-radius:9px}
@@ -203,6 +203,35 @@
     .finish-coverage summary {cursor:pointer;color:#003871;font-weight:700}
     .finish-coverage a {color:#07599a}
     @media(max-width:430px){.finish-search-row{grid-template-columns:1fr}.finish-results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+    .home-photo-section {max-width:1200px;margin:12px auto 40px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:18px}
+    .home-photo-section h2 {margin:0 0 8px;color:var(--blue)}
+    .photo-intro,.photo-status {color:var(--muted);font-size:.9rem;line-height:1.5}
+    .photo-tools {display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0}
+    .photo-tools button,.photo-upload {border:1px solid #bed0dd;border-radius:8px;padding:11px 15px;background:#f1f6f9;color:var(--blue);font:inherit;font-weight:600;cursor:pointer}
+    .photo-upload {background:var(--blue);color:#fff;display:inline-block}
+    .photo-upload:focus-within {outline:3px solid #e6b64e;outline-offset:3px}
+    .photo-upload input {position:absolute;width:1px;height:1px;opacity:0}
+    .photo-tools button:disabled {opacity:.45;cursor:default}
+    .photo-stage {position:relative;background:#eef1ee;border-radius:12px;overflow:hidden;min-height:160px;touch-action:none}
+    #home-photo-canvas {display:block;width:100%;height:auto}
+    #home-photo-canvas[hidden] {display:none}
+    .photo-empty {padding:45px 22px;text-align:center;color:#53665b}
+    .photo-handle {position:absolute;width:28px;height:28px;transform:translate(-50%,-50%);border:3px solid white;border-radius:50%;background:#0066a8;box-shadow:0 1px 6px #0008;cursor:grab;touch-action:none;padding:0;color:white;font:bold 12px Arial}
+    .photo-handle:focus-visible {outline:3px solid #f2bd47;outline-offset:3px}
+    .photo-adjustments {display:flex;flex-wrap:wrap;gap:22px;margin-top:18px}
+    .photo-adjustments label {font-size:.85rem;color:#53665b;display:grid;gap:5px;min-width:150px;flex:1}
+    .photo-adjustments input {width:100%}
+    #photo-print-sheet {display:none}
+    @media(max-width:760px){.home-photo-section{margin:12px 14px 30px;padding:18px}.photo-tools button,.photo-upload{font-size:.8rem;padding:10px}.photo-handle{width:30px;height:30px}}
+    @media print {.home-photo-section {display:none!important}body.photo-print > * {display:none!important}body.photo-print #photo-print-sheet {display:block!important}#photo-print-sheet img{width:100%;height:auto;max-height:7in;object-fit:contain}#photo-print-sheet h1{font-size:20px;color:#003871}#photo-print-sheet p{font-size:11px}}
+    .sidelite-settings {padding:18px;background:#f3f7f8;border:1px solid var(--line);border-radius:12px;margin:8px 0 12px}
+    .sidelite-design-grid {grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:16px}
+    .sidelite-design-grid label {display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px}
+    .sidelite-design-grid svg {width:55px;height:120px;display:block}
+    .sidelite-side-control {display:grid;gap:7px;color:var(--blue);font-size:.88rem;font-weight:600}
+    .sidelite-side-control select {width:100%;padding:10px;border:1px solid #bdcddb;border-radius:7px;background:white;font:inherit;color:#334c5a}
+    .sidelite-side-control[hidden],.sidelite-design-grid[hidden] {display:none}
   </style>
 </head>
 <body>
@@ -248,6 +277,15 @@
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="no-sidelites" value="0" data-label="No sidelites" checked><label for="no-sidelites">No Sidelites</label></div><span class="price">Included</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="one-sidelite" value="1200" data-label="One sidelite"><label for="one-sidelite">One Sidelite</label></div><span class="price">+$1,200</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="two-sidelites" value="2400" data-label="Two sidelites"><label for="two-sidelites">Two Sidelites</label></div><span class="price">+$2,400</span></div>
+          <div class="sidelite-settings" id="sidelite-settings" hidden>
+            <p class="sub-option-title">Sidelite design</p>
+            <p class="sub-option-help" id="sidelite-alignment-note">Half-lite sidelites have glass in the upper half and a solid panel below. The selected design applies to both sidelites when two are chosen.</p>
+            <div class="size-grid sidelite-design-grid" id="sidelite-design-choices">
+              <div class="size-choice"><input type="radio" name="sidelite-style" id="sidelite-full" value="0" data-label="Full-lite sidelites" checked><label for="sidelite-full"><svg viewBox="0 0 60 130" aria-hidden="true"><rect x="10" y="3" width="40" height="123" fill="#f1f1ec" stroke="#8c9b94"/><rect x="16" y="13" width="28" height="102" fill="#a9c1bd" stroke="#fff" stroke-width="3"/></svg><span>Full-Lite</span><small>Full-height glass</small></label></div>
+              <div class="size-choice"><input type="radio" name="sidelite-style" id="sidelite-half" value="0" data-label="Half-lite sidelites"><label for="sidelite-half"><svg viewBox="0 0 60 130" aria-hidden="true"><rect x="10" y="3" width="40" height="123" fill="#f1f1ec" stroke="#8c9b94"/><rect x="16" y="13" width="28" height="57" fill="#a9c1bd" stroke="#fff" stroke-width="3"/><rect x="16" y="87" width="28" height="28" fill="#e2e5de" stroke="#8c9b94"/><rect x="19" y="90" width="22" height="22" fill="#f1f1ec" stroke="#fff"/></svg><span>Half-Lite</span><small>Glass above / panel below</small></label></div>
+            </div>
+            <label class="sidelite-side-control" id="sidelite-side-control">Single sidelite position — viewed from outside<select id="order-side"><option value="Left">Left of the door</option><option value="Right">Right of the door</option></select></label>
+          </div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="clear-glass" value="0" data-label="Clear glass" disabled><label for="clear-glass">Clear Glass</label></div><span class="price">Included</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="decorative" value="2500" data-label="Decorative glass" disabled><label for="decorative">Decorative Glass</label></div><span class="price">+$2,500</span></div>
           <div class="sub-option" id="decorative-design-wrap">
@@ -280,7 +318,7 @@
 <section class="section"><h2>7. Ordering details</h2><p class="style-intro">Record final measurements and manufacturer details for the order sheet. These fields do not change pricing.</p><div class="order-grid"><label>Customer / job name<input id="order-customer" type="text" maxlength="300"></label><label>Job address<input id="order-address" type="text" maxlength="300"></label><label>Order / PO number<input id="order-order-number" type="text" maxlength="300"></label><label>Prepared by<input id="order-prepared-by" type="text" maxlength="300"></label><label>Manufacturer / product line<input id="order-manufacturer" type="text" maxlength="300"></label><label>Door material<input id="order-material" type="text" maxlength="300"></label><label>Overall frame size (W × H)<input id="order-unit-size" type="text" maxlength="300"></label><label>Rough opening (W × H)<input id="order-rough-opening" type="text" maxlength="300"></label><label>Actual slab height / cut-down<input id="order-actual-height" type="text" maxlength="300"></label><label>Jamb depth<input id="order-jamb" type="text" maxlength="300"></label><label>Exterior finish / color<input id="order-exterior-color" type="text" maxlength="300"></label><label>Interior finish / color<input id="order-interior-color" type="text" maxlength="300"></label><label>Sidelite width(s)<input id="order-sidelite-width" type="text" maxlength="300"></label><label>Glass insert size / model<input id="order-glass-size" type="text" maxlength="300"></label><label>Hardware / bore preparation<input id="order-hardware" type="text" maxlength="300"></label><label>Impact product approval / DP<input id="order-approval" type="text" maxlength="300"></label><label>Swing<select id="order-swing"><option value="">To be confirmed</option><option>In-swing</option><option>Out-swing</option></select></label>
 <label>Hinge side, viewed from exterior<select id="order-hinge"><option value="">To be confirmed</option><option>Left</option><option>Right</option></select></label>
 <label>Active leaf (double door), exterior view<select id="order-active"><option value="">To be confirmed</option><option>Left</option><option>Right</option></select></label>
-<label>One sidelite location, exterior view<select id="order-side"><option value="">To be confirmed</option><option>Left</option><option>Right</option></select></label>
+
 <label>Custom exterior color<input id="order-color" type="color" value="#f2f0e9"></label><label id="interior-custom-color">Custom interior color<input id="order-interior-preview-color" type="color" value="#f2f0e9"></label>
 <label class="order-wide">Order notes / special instructions<textarea id="order-notes" rows="4" maxlength="5000"></textarea></label></div></section>
     </form>
@@ -300,6 +338,17 @@
       <p class="fine">List-price estimate for internal Koehler use.</p>
     </aside>
   </main>
+
+  <section class="home-photo-section" aria-labelledby="photo-heading">
+    <span class="preview-eyebrow">SEE IT ON YOUR HOME</span><h2 id="photo-heading">Your entrance, your new door</h2>
+    <p class="photo-intro">Upload a front-facing photo, then drag the four numbered corners to the <strong>outside edges of the entire door frame</strong>. Include both doors and any sidelites in the opening. Your selected exterior design updates automatically. Photos stay in this browser.</p>
+    <div class="photo-tools"><label class="photo-upload">Upload Home Photo<input type="file" id="home-photo-upload" accept="image/jpeg,image/png,image/webp" aria-label="Upload a JPG, PNG or WebP home photo"></label><button type="button" id="photo-before" disabled aria-pressed="false">Show Original</button><button type="button" id="photo-fit-reset" disabled>Reset Placement</button><button type="button" id="photo-download" disabled>Download Rendering</button><button type="button" id="photo-print" disabled>Print Rendering / Save PDF</button><button type="button" id="photo-remove" disabled>Remove Photo</button></div>
+    <div class="photo-stage" id="photo-stage"><div class="photo-empty" id="photo-empty">Choose a door style above, then upload a photo of the entrance.</div><canvas id="home-photo-canvas" hidden aria-label="Home photo with configured door overlay"></canvas><div id="photo-handles" hidden><button type="button" class="photo-handle" data-corner="0" aria-label="Top left door corner. Use arrow keys to adjust; hold Shift for larger steps.">1</button><button type="button" class="photo-handle" data-corner="1" aria-label="Top right door corner. Use arrow keys to adjust; hold Shift for larger steps.">2</button><button type="button" class="photo-handle" data-corner="2" aria-label="Bottom right door corner. Use arrow keys to adjust; hold Shift for larger steps.">3</button><button type="button" class="photo-handle" data-corner="3" aria-label="Bottom left door corner. Use arrow keys to adjust; hold Shift for larger steps.">4</button></div></div>
+    <div class="photo-adjustments"><label>Door brightness<input id="photo-brightness" type="range" min="55" max="145" value="100"></label><label>Door shadow<input id="photo-shadow" type="range" min="0" max="50" value="12"></label><label>Alignment transparency<input id="photo-opacity" type="range" min="20" max="100" value="100"></label></div>
+    <p class="photo-status" id="photo-status" role="status">Corners: 1 top left · 2 top right · 3 bottom right · 4 bottom left. Drag inside the outlined opening to move the whole door. Arrow keys also adjust a focused corner.</p>
+    <p class="photo-intro">Concept rendering for design comparison. Lighting is adjustable; the photo’s existing trim, obstructions and shadows are not automatically removed. Downloaded and printed renderings use the finished door at full opacity.</p>
+  </section>
+  <section id="photo-print-sheet" aria-label="Home photo door rendering"></section>
   <section id="order-sheet" aria-label="Door ordering specification sheet"></section>
   <script>
     const form = document.getElementById('pricer');
@@ -448,7 +497,25 @@
       }).join('');
     }
 
+    function updateSideliteControls() {
+      const type=selected('sidelite')?.id, hasSidelites=!!type&&type!=='no-sidelites';
+      document.getElementById('sidelite-settings').hidden=!hasSidelites;
+      const matched=selected('door')?.dataset.glass==='true';
+      document.getElementById('sidelite-design-choices').hidden=matched;
+      document.getElementById('sidelite-alignment-note').textContent=matched?'Sidelite glass automatically matches the top and bottom of the selected door glass for a balanced entrance. Glass sizes and compatibility must be confirmed with the manufacturer.':'Half-lite sidelites have glass in the upper half and a solid panel below. The selected design applies to both sidelites when two are chosen.';
+      document.querySelectorAll('input[name="sidelite-style"]').forEach(input=>input.disabled=!hasSidelites||matched);
+      document.getElementById('sidelite-side-control').hidden=type!=='one-sidelite';
+      document.getElementById('order-side').disabled=type!=='one-sidelite';
+    }
+    function sideliteDescription() {
+      const type=selected('sidelite')?.id;
+      if(!type||type==='no-sidelites')return 'No sidelites';
+      const half=selected('sidelite-style')?.id==='sidelite-half';
+      const design=selected('door')?.dataset.glass==='true'?'door-matched glass':half?'half-lite':'full-lite';
+      return `${type==='two-sidelites'?'Two':'One'} ${design} sidelite${type==='two-sidelites'?'s':' — '+orderValue('side')+' of door (exterior view)'}`;
+    }
     function calculate() {
+      updateSideliteControls();
       updateGlassProtection();
       updateDoorStyles();
       const chosen = [...form.querySelectorAll('input:checked')];
@@ -503,7 +570,7 @@
         `Height: ${height.dataset.label}`
       ];
       if (doorStyle) lines.push(`Door Style: ${doorStyle.value}`);
-      if (sidelite) lines.push(`Sidelites: ${sidelite.dataset.label}`);
+      if (sidelite) lines.push(`Sidelites: ${sideliteDescription()}`);
       if (glass) {
         let glassText = glass.dataset.label;
         const design = form.querySelector('input[name="decorative-design"]:checked')?.value;
@@ -590,7 +657,7 @@
       const inches=t.match(/^(\d+(?:\.\d+)?)\s*(?:"|in(?:ches)?)?$/i);
       return inches?Number(inches[1]):fallback;
     }
-    function previewSVG(prefix='doorScene',forcedView) {
+    function previewSVG(prefix='doorScene',forcedView,photoOnly=false) {
       const door=selected('door');
       if(!door) return '<div class="preview-empty"><div class="empty-door-icon">▯</div><strong>Build their perfect entrance</strong><span>Choose a door, then select a catalog style to start designing.</span></div>';
       const interior=(forcedView||document.getElementById('preview-view').value)==='interior';
@@ -617,7 +684,9 @@
       const solidStain=chosenStain?.group && /solid color|deck & dock/i.test(chosenStain.group);
       const grain=(stain&&!solidStain)||document.getElementById('wood-grain').checked;
       const color=interior&&twoTone?orderValue('interior-preview-color'):orderValue('color');
-      const dark=shade(color,-.35),light=shade(color,.28),base=shade(color,-.08);
+      const dark=shade(color,-.27),light=shade(color,.18),base=shade(color,-.07);
+      const swing=orderValue('swing');
+      const showHinges=swing==='In-swing'?interior:swing==='Out-swing'?!interior:true;
       const metal=document.getElementById('preview-metal').value;
       const hardwareColor=metal==='black'?'#24282b':metal==='brass'?'#b79145':'#b0b5b9';
       const metallicHi=metal==='black'?'#657078':metal==='brass'?'#f1dba1':'#edf2f4';
@@ -631,8 +700,11 @@
       const texture=designInfo?.[2]==='Textured Glass';
       let defs=`<defs>
         <linearGradient id="${id('wall')}" x2="0" y2="1"><stop stop-color="#f5f3ef"/><stop offset="1" stop-color="#deded8"/></linearGradient>
-        <linearGradient id="${id('face')}" x2="1" y2="0"><stop stop-color="${light}"/><stop offset=".11" stop-color="${color}"/><stop offset=".77" stop-color="${color}"/><stop offset="1" stop-color="${base}"/></linearGradient>
-        <linearGradient id="${id('glass')}" x2=".8" y2="1"><stop stop-color="#7c9b9e"/><stop offset=".45" stop-color="#bfd2cc"/><stop offset="1" stop-color="#66817a"/></linearGradient>
+        <linearGradient id="${id('face')}" x1="0" y1="0" x2="1" y2=".15"><stop stop-color="${shade(color,.09)}"/><stop offset=".22" stop-color="${color}"/><stop offset=".74" stop-color="${shade(color,-.02)}"/><stop offset="1" stop-color="${base}"/></linearGradient>
+        <linearGradient id="${id('panel-face')}" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="${shade(color,-.09)}"/><stop offset=".35" stop-color="${shade(color,-.025)}"/><stop offset="1" stop-color="${shade(color,.055)}"/></linearGradient>
+        <linearGradient id="${id('bevel')}" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="${shade(color,-.24)}"/><stop offset=".48" stop-color="${shade(color,-.07)}"/><stop offset=".51" stop-color="${shade(color,.21)}"/><stop offset="1" stop-color="${shade(color,.35)}"/></linearGradient>
+        <linearGradient id="${id('glass-edge')}" x2=".5" y2="1"><stop stop-color="#152a31" stop-opacity=".43"/><stop offset=".09" stop-color="#152a31" stop-opacity="0"/><stop offset=".92" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient>
+        <linearGradient id="${id('glass')}" x2=".8" y2="1"><stop stop-color="#647e8b"/><stop offset=".28" stop-color="#b3c5ca"/><stop offset=".55" stop-color="#82979c"/><stop offset="1" stop-color="#394e55"/></linearGradient>
         <linearGradient id="${id('frost')}" x2="1" y2="1"><stop stop-color="#eef1ea"/><stop offset=".52" stop-color="#b7c8c2"/><stop offset="1" stop-color="#d9e2dc"/></linearGradient>
         <linearGradient id="${id('metal')}" x2="1" y2="1"><stop stop-color="${hardwareColor}"/><stop offset=".4" stop-color="${metallicHi}"/><stop offset=".7" stop-color="${hardwareColor}"/><stop offset="1" stop-color="${metallicHi}"/></linearGradient>
         <linearGradient id="${id('shine')}" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".42"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient>
@@ -643,13 +715,15 @@
       </defs>`;
       let serial=0;
       function panel(x,y,w,h,fluted=false,arched=false) {
-        if(arched){const path=(n)=>`M${x+n} ${y+12+n} Q${x+w/2} ${y-8+n} ${x+w-n} ${y+12+n} V${y+h-n} H${x+n}Z`;let out=`<path d="${path(0)}" fill="${dark}"/><path d="${path(2.5)}" fill="${light}"/><path d="${path(5)}" fill="${url('face')}"/>`;if(fluted)for(let xx=x+10;xx<x+w-8;xx+=7)out+=`<path d="M${xx} ${y+17}v${h-24}" stroke="${dark}" opacity=".6"/>`;return out;}
-        let out=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="${dark}"/><rect x="${x+2.5}" y="${y+2.5}" width="${w-5}" height="${h-5}" rx="1.1" fill="${light}"/><rect x="${x+5}" y="${y+5}" width="${w-10}" height="${h-10}" rx="1" fill="${url('face')}"/><path d="M${x+4} ${y+h-4} V${y+4} H${x+w-4}" fill="none" stroke="${shade(color,.45)}" stroke-width="1" opacity=".7"/>`;
-        if(grain) out+=`<rect x="${x+5}" y="${y+5}" width="${w-10}" height="${h-10}" fill="${url('grain')}"/>`;
-        if(fluted) for(let xx=x+10;xx<x+w-8;xx+=7) out+=`<path d="M${xx} ${y+8}v${h-16}" stroke="${dark}" stroke-width="1"/><path d="M${xx+1.7} ${y+8}v${h-16}" stroke="${light}" stroke-width="1"/>`;
-        return out;
+        const bevel=Math.min(5.5,w*.12,h*.12);
+        const path=n=>arched?`M${x+n} ${y+12+n} Q${x+w/2} ${y-8+n} ${x+w-n} ${y+12+n} V${y+h-n} H${x+n}Z`:`M${x+n} ${y+n}H${x+w-n}V${y+h-n}H${x+n}Z`;
+        const clip=id('panel'+serial++);
+        let out=`<path d="${path(0)}" fill="${url('bevel')}" stroke="${shade(color,-.18)}" stroke-width=".8"/><path d="${path(1.2)}" fill="none" stroke="${shade(color,.22)}" stroke-width=".65"/><path d="${path(bevel)}" fill="${url('panel-face')}" stroke="${shade(color,-.19)}" stroke-width=".8"/><defs><clipPath id="${clip}"><path d="${path(bevel+.8)}"/></clipPath></defs><g clip-path="url(#${clip})">`;
+        if(grain)out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('grain')}" opacity=".72"/>`;
+        if(fluted)for(let xx=x+10;xx<x+w-8;xx+=7)out+=`<path d="M${xx} ${y}v${h}" stroke="${dark}" stroke-width=".85" opacity=".6"/><path d="M${xx+1.1} ${y}v${h}" stroke="${light}" stroke-width=".7"/>`;
+        return out+'</g>';
       }
-      function glassInsert(x,y,w,h,type='rect',arch=0) {
+      function glassInsert(x,y,w,h,type='rect',arch=0,isSidelite=false) {
         const clip=id('clip'+serial++);
         function outline(stroke,fill,sw,inset=0) {
           const xx=x+inset,yy=y+inset,ww=w-2*inset,hh=h-2*inset;
@@ -661,10 +735,21 @@
         const clipShape=outline('none','#fff',0,5.7);
         out+=`<defs><clipPath id="${clip}">${clipShape}</clipPath></defs><g clip-path="url(#${clip})">`;
         if(designImage) {
-          // Crop away catalog page gutters and corner labels with a small zoom.
-          out+=`<image href="${escapeHTML(designImage)}" xlink:href="${escapeHTML(designImage)}" x="${x-3}" y="${y-3}" width="${w+6}" height="${h+6}" preserveAspectRatio="xMidYMid slice"/>`;
+          if(texture) {
+            // Texture is a surface sample, so cover the opening without distorting its scale.
+            out+=`<image href="${escapeHTML(designImage)}" xlink:href="${escapeHTML(designImage)}" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`;
+          } else {
+            // Decorative samples include page gutters. Map only the pattern into the inner glass,
+            // keeping the main design visible instead of zooming and chopping off its sides.
+            const inset=5.7,innerW=w-2*inset,innerH=h-2*inset;
+            const transom=innerW/innerH>2;
+            const sampleBox=isSidelite?'48 7 60 173':transom?'12 48 132 100':'12 7 132 173';
+            out+=`<svg data-decorative-fit="${isSidelite?'sidelite':transom?'transom':'door'}" x="${x+inset}" y="${y+inset}" width="${innerW}" height="${innerH}" viewBox="${sampleBox}" preserveAspectRatio="none" overflow="hidden"><image href="${escapeHTML(designImage)}" xlink:href="${escapeHTML(designImage)}" x="0" y="0" width="156" height="180" preserveAspectRatio="none"/></svg>`;
+            // A subtle inner seal ties the photograph to the modeled door frame.
+            out+=outline('#25383a','none',.8,5.6);
+          }
         } else {
-          out+=`<path d="M${x-10} ${y+h*.6} Q${x+w*.2} ${y+h*.22} ${x+w*.5} ${y+h*.68} T${x+w+10} ${y+h*.45} V${y+h+10} H${x-10}Z" fill="#4f6f5c" opacity="${glass==='clear'||glass==='gbg'||glass==='sdl'?'.38':'.10'}"/>`;
+          out+=`<path d="M${x} ${y+h*.59} Q${x+w*.18} ${y+h*.5} ${x+w*.33} ${y+h*.62} T${x+w} ${y+h*.58} V${y+h}H${x}Z" fill="#344840" opacity="${glass==='clear'||glass==='gbg'||glass==='sdl'?'.22':'.07'}"/><path d="M${x+w*.12} ${y+h*.18} Q${x+w*.52} ${y+h*.08} ${x+w*.88} ${y+h*.24}" stroke="#f0f6f8" stroke-width="${Math.max(6,h*.055)}" opacity=".1" fill="none"/>`;
           if(glass==='obscure') out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('frostDots')}"/>`;
           if(glass==='rain') out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('rain')}"/>`;
           if(glass==='blinds') {
@@ -680,7 +765,7 @@
             for(let j=1;j<rows;j++) {const yy=y+h*j/rows;out+=`<path d="M${x} ${yy}h${w}" stroke="#263d3b" stroke-opacity=".23" stroke-width="${gridW+2}"/><path d="M${x} ${yy}h${w}" stroke="${gridColor}" stroke-width="${gridW}"/>`;}
           }
         }
-        out+=`<path d="M${x-w*.2} ${y+h*.48}L${x+w*.88} ${y-h*.12}h${w*.18}L${x-w*.02} ${y+h*.55}Z" fill="#fff" opacity=".11"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('shine')}"/></g>`;
+        out+=`<path d="M${x-w*.2} ${y+h*.48}L${x+w*.88} ${y-h*.12}h${w*.18}L${x-w*.02} ${y+h*.55}Z" fill="#fff" opacity=".11"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('shine')}" opacity="${designImage&&!texture ? .24 : 1}"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${url('glass-edge')}"/></g>`;
         return out;
       }
       const activeLeft=orderValue('active')==='Left';
@@ -688,15 +773,24 @@
       function leaf(x,w,side=false,index=0) {
         let out=`<rect x="${x}" y="0" width="${w}" height="${H}" fill="${url('face')}" stroke="${dark}" stroke-width="1.4"/><path d="M${x+1.5} ${H-1.5}V1.5H${x+w-1.5}" stroke="${light}" stroke-width="1" fill="none"/>`;
         if(grain)out+=`<rect x="${x+1}" y="1" width="${w-2}" height="${H-2}" fill="${url('grain')}"/>`;
-        if(side) out+=glassInsert(x+2.1*scale,7*scale,w-4.2*scale,H-14*scale);
+        if(side) {
+          const half=selected('sidelite-style')?.id==='sidelite-half';
+          out+=`<g data-sidelite-design="${lite&&shape.glass?'matched':half?'half':'full'}">`;
+          const matched=lite&&shape.glass;
+          const glassY=matched?shape.glass[1]*H:7*scale,glassH=matched?shape.glass[3]*H:half?H*.46:H-14*scale;
+          out+=`<g data-glass-top="${glassY}" data-glass-height="${glassH}">${glassInsert(x+2.1*scale,glassY,w-4.2*scale,glassH,'rect',0,true)}</g>`;
+          if(matched){const lower=shape.panels.filter(r=>r[1]>=shape.glass[1]+shape.glass[3]-.01);if(lower.length){const y=Math.min(...lower.map(r=>r[1])),bottom=Math.max(...lower.map(r=>r[1]+r[3]));out+=panel(x+2.1*scale,y*H,w-4.2*scale,(bottom-y)*H);}}
+          else if(half)out+=panel(x+2.1*scale,H*.66,w-4.2*scale,H*.23);
+          out+='</g>';
+        }
         else {
           for(const [index,r] of shape.panels.entries())out+=panel(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.fluted,shape.archPanel&&index===0);
-          if(shape.glass) {const r=shape.glass;out+=glassInsert(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.shape,shape.arch?shape.arch*H:0);}
+          if(shape.glass) {const r=shape.glass;out+=`<g data-door-glass-top="${r[1]*H}" data-door-glass-height="${r[3]*H}">${glassInsert(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.shape,shape.arch?shape.arch*H:0)}</g>`;}
           const active=!double||(index===(activeLeft?0:1));
           const hingeRight=double?index===1:orderValue('hinge')==='Right';
           const hx=double?(index===0?x+w-3.0*scale:x+3.0*scale):(hingeRight?x+3.0*scale:x+w-3.0*scale);
           const hingeX=hingeRight?x+w-1:x+1;
-          for(const yy of [.18,.51,.82])out+=`<rect x="${hingeX-1}" y="${H*yy}" width="2" height="${4*scale}" rx="1" fill="${url('metal')}"/>`;
+          if(showHinges)for(const yy of [.18,.51,.82])out+=`<rect data-door-hinge="true" x="${hingeX-1}" y="${H*yy}" width="2" height="${4*scale}" rx="1" fill="${url('metal')}"/>`;
           if(active){
             const hy=H*.56;
             out+=`<circle cx="${hx}" cy="${hy-7*scale}" r="${1.25*scale}" fill="${url('metal')}" stroke="#41484b" stroke-width=".7"/><path d="M${hx-.45*scale} ${hy-7*scale}h${.9*scale}" stroke="#25292b" stroke-width="1"/>`;
@@ -709,13 +803,14 @@
         return out;
       }
       let x=0;
-      if(left){body+=leaf(x,leftW*scale,true);x+=(leftW+1.2)*scale;}
+      if(left){body+=`<g data-sidelite-side="left">${leaf(x,leftW*scale,true)}</g>`;x+=(leftW+1.2)*scale;}
       for(let i=0;i<leafCount;i++){body+=leaf(x,dw,false,i);x+=dw;}
-      if(right){x+=1.2*scale;body+=leaf(x,rightW*scale,true);}
+      if(right){x+=1.2*scale;body+=`<g data-sidelite-side="right">${leaf(x,rightW*scale,true)}</g>`;}
       const label=style?style.toUpperCase():'SELECT A CATALOG STYLE';
       const dims=(double?2+' × ':'')+slabW+'″ × '+slabH+'″';
       const badge=document.getElementById('impact').checked?'<path d="M14 0l12 5v10c0 9-12 15-12 15S2 24 2 15V5Z" fill="#e9f3ee" stroke="#4c7a69"/><path d="m8 14 4 4 8-9" fill="none" stroke="#356d53" stroke-width="2.5"/>':'';
       const mirror=interior?`translate(${W} 0) scale(-1 1)`:'';
+      if(photoOnly)return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${totalW*4}" height="${totalH*4}" viewBox="0 0 ${totalW} ${totalH}">${defs}<rect width="${totalW}" height="${totalH}" fill="${light}" stroke="${shade(color,-.25)}"/><path d="M4 ${totalH}V4H${totalW-4}V${totalH}" stroke="${color}" stroke-width="5" fill="none"/><rect x="11" y="11" width="${W+6}" height="${H+6}" fill="#303735"/><g transform="translate(14 14)">${body}</g><rect x="8" y="${H+23}" width="${W+12}" height="5" fill="${url('metal')}"/></svg>`;
       return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700" height="590" viewBox="0 0 700 590" role="img" aria-label="${escapeHTML((interior?'Interior':'Exterior')+' door design, '+label+', '+dims)}">${defs}<rect width="700" height="590" rx="16" fill="${url('wall')}"/><path d="M0 510H700V590H0Z" fill="#d7d9d4"/><path d="M0 510H700" stroke="#c2c5bf"/><path d="M60 590l120-80 M310 590l30-80 M630 590l-120-80" stroke="#c9ccc5"/><ellipse cx="350" cy="${y0+totalH+10}" rx="${totalW*.77}" ry="22" fill="${url('ground')}"/><text x="26" y="32" fill="#54615a" font-family="Arial,sans-serif" font-size="11" letter-spacing="2">${interior?'INTERIOR':'EXTERIOR'} VIEW</text><text x="674" y="32" text-anchor="end" fill="#54615a" font-family="Arial,sans-serif" font-size="11" letter-spacing="1.5">${escapeHTML(label)}</text><g transform="translate(${x0} ${y0})"><rect x="3" y="4" width="${totalW+2}" height="${totalH}" rx="2" fill="#37413b" opacity=".17"/><rect width="${totalW}" height="${totalH}" fill="${light}" stroke="${shade(color,-.25)}" stroke-width="1"/><path d="M4 ${totalH}V4H${totalW-4}V${totalH}" stroke="${color}" stroke-width="5" fill="none"/><rect x="11" y="11" width="${W+6}" height="${H+6}" fill="#303735"/><g transform="translate(14 14)"><g transform="${mirror}">${body}</g></g><rect x="8" y="${H+23}" width="${W+12}" height="5" fill="${url('metal')}"/><path d="M9 ${H+24}h${W+10}" stroke="#f4f6f3" stroke-width="1"/></g><text x="350" y="554" text-anchor="middle" fill="#425149" font-family="Arial,sans-serif" font-size="13" letter-spacing="1">${escapeHTML(dims)} ${double?'PER LEAF':'SLAB'}</text><g transform="translate(25 535)">${badge}</g><text x="${badge?61:26}" y="581" fill="#5d6b62" font-family="Arial,sans-serif" font-size="11">${badge?'Impact rated · ':''}${escapeHTML(orderValue('swing')||'Swing to be confirmed')}</text></svg>`;
     }
     function catalogReference() {
@@ -851,12 +946,13 @@
       syncFinishColors();
       renderFinishPicker();
       document.getElementById('door-preview').innerHTML=previewSVG();
+      refreshHomeDoor();
       document.getElementById('catalog-reference').innerHTML=catalogReference();
       document.getElementById('blinds-control').hidden=selected('glass-style')?.id!=='blinds';
       const tags=[];
       const style=selected('door-style')?.value;
       if(style)tags.push(style);
-      if(selected('sidelite'))tags.push(selected('sidelite').dataset.label);
+      if(selected('sidelite'))tags.push(sideliteDescription());
       const glass=selected('glass-style');
       if(glass)tags.push(glass.dataset.label+(glass.id==='decorative'&&selected('decorative-design')?' · '+selected('decorative-design').value:''));
       if(selected('finish'))tags.push(selected('finish').dataset.label);
@@ -868,6 +964,7 @@
       const solidModel=solidCatalog.find(x=>x.code===style);
       if(solidModel){const width={w36:42,w30:36,w210:34,w28:32,w26:30,w24:28,w20:24}[selected('width')?.id];const narrow=['flush','six'].includes(solidModel.key)||solidModel.prefix==='MHD'&&solidModel.key==='blank';if(width>36||width<32&&!narrow||solidModel.prefix==='MHD'&&solidModel.height==='80'&&solidModel.key==='square'&&width!==36)notes.push('The selected solid model is not listed at this width in the catalog. Confirm a supported slab width before ordering.');if(selected('height')?.id==='cut-down')notes.push('Confirm that the selected panel design can be cut down to the requested height.');}
       if(glass?.id==='decorative'&&!selected('decorative-design'))notes.push('Choose a decorative or textured glass design.');
+      if(glass?.id==='decorative'&&selected('decorative-design')&&glassCatalog.find(([name])=>name===selected('decorative-design').value)?.[2]==='Decorative Glass')notes.push('Decorative pattern is fitted to the opening for this preview; confirm the matching door and sidelite glass size, pattern and availability before ordering.');
       if(door?.dataset.glass==='true') {
         const layout=modelLayouts[style]||{glass:[.15,.08,.7,.82]};
         const g=layout.glass;
@@ -882,7 +979,7 @@
     function orderRows() {
       const door=selected('door'), glass=selected('glass-style');
       const solidModel=solidCatalog.find(x=>x.code===selected('door-style')?.value);
-      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',selected('sidelite')?.dataset.label],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
+      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
       if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family]);
       const fields=[["customer", "Customer / job name"], ["address", "Job address"], ["order-number", "Order / PO number"], ["prepared-by", "Prepared by"], ["manufacturer", "Manufacturer / product line"], ["material", "Door material"], ["unit-size", "Overall frame size (W \u00d7 H)"], ["rough-opening", "Rough opening (W \u00d7 H)"], ["actual-height", "Actual slab height / cut-down"], ["jamb", "Jamb depth"], ["exterior-color", "Exterior finish / color"], ["interior-color", "Interior finish / color"], ["sidelite-width", "Sidelite width(s)"], ["glass-size", "Glass insert size / model"], ["hardware", "Hardware / bore preparation"], ["approval", "Impact product approval / DP"]];
       fields.forEach(([id,label])=>rows.push([label,id==='exterior-color'?catalogFinishDetails('exterior'):id==='interior-color'?catalogFinishDetails('interior'):(orderValue(id)||'To be confirmed')]));
@@ -893,6 +990,7 @@
       return rows;
     }
     function prepareOrderSheet() {
+      document.body.classList.remove('photo-print');
       if(!selected('door')) return false;
       const logo=document.querySelector('.brand-logo').src;
       document.getElementById('order-sheet').innerHTML=`<div class="print-head"><img src="${escapeHTML(logo)}" alt="Koehler Home Improvement"><div><h1>Door Ordering Specifications</h1><div>Prepared ${escapeHTML(new Date().toLocaleDateString('en-US'))}</div></div></div><div class="print-layout"><div>${previewSVG('orderScene','exterior')}<p>Exterior design visualization. Verify final dimensions, glass proportions, accessory placement and availability before ordering.</p>${/-2$/.test(selected('finish')?.id||'') ? previewSVG('interiorOrderScene','interior')+'<p>Interior finish view</p>' : ''}<div class="print-reference">${catalogReference()}</div></div><table class="print-table"><tbody>${orderRows().map(([key,value])=>`<tr><th>${escapeHTML(key)}</th><td>${escapeHTML(value)}</td></tr>`).join('')}</tbody></table></div>${document.getElementById('preview-validation').textContent ? `<p class="print-note"><strong>Configuration review:</strong> ${escapeHTML(document.getElementById('preview-validation').textContent)}</p>` : ''}<div class="print-note"><strong>Special instructions</strong>\n${escapeHTML(orderValue('notes')||'None entered.')}</div><p>Items marked “To be confirmed” are unfinished ordering details. Confirm measurements, handing, glass compatibility and product approvals before submitting to the manufacturer.</p><div class="print-sign">Verified by: ________________________ &nbsp; Date: _______________</div>`;
@@ -903,7 +1001,7 @@
       await Promise.all([...document.querySelectorAll('#order-sheet img')].map(img=>img.decode().catch(()=>{})));
       window.print();
     });
-    window.addEventListener('beforeprint',prepareOrderSheet);
+    window.addEventListener('beforeprint',()=>{if(!document.body.classList.contains('photo-print'))prepareOrderSheet();});
     form.addEventListener('input',event=>{
       if(event.target.id==='order-color')document.getElementById('order-exterior-color').value=colorName(orderValue('color'));
       if(event.target.id==='order-interior-preview-color')document.getElementById('order-interior-color').value=colorName(orderValue('interior-preview-color'));
@@ -933,6 +1031,45 @@
       if(event.target.id==='preview-metal')document.getElementById('order-hardware').value=document.getElementById('preview-metal').selectedOptions[0].textContent;
       updatePreview();
     });
+
+    const homePhoto={image:null,door:null,corners:[],before:false,version:0,loading:Promise.resolve(),uploadVersion:0};
+    const photoCanvas=document.getElementById('home-photo-canvas'), photoStage=document.getElementById('photo-stage');
+    const photoContext=photoCanvas.getContext('2d');
+    const photoControls=['photo-before','photo-fit-reset','photo-remove'];
+    function photoMessage(text){document.getElementById('photo-status').textContent=text;}
+    function resetPhotoPlacement(){const w=photoCanvas.width,h=photoCanvas.height;homePhoto.corners=[[w*.39,h*.17],[w*.61,h*.17],[w*.61,h*.88],[w*.39,h*.88]];drawHomePhoto();}
+    function validPhotoCorners(points){let direction=0;for(let i=0;i<4;i++){const a=points[i],b=points[(i+1)%4],c=points[(i+2)%4];const cross=(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);if(Math.abs(cross)<2)return false;if(!direction)direction=Math.sign(cross);if(Math.sign(cross)!==direction)return false;}return direction>0;}
+    function photoHomography(points){const a=[],b=[];[[0,0],[1,0],[1,1],[0,1]].forEach(([u,v],i)=>{const [x,y]=points[i];a.push([u,v,1,0,0,0,-x*u,-x*v]);b.push(x);a.push([0,0,0,u,v,1,-y*u,-y*v]);b.push(y);});for(let i=0;i<8;i++){let best=i;for(let j=i+1;j<8;j++)if(Math.abs(a[j][i])>Math.abs(a[best][i]))best=j;[a[i],a[best]]=[a[best],a[i]];[b[i],b[best]]=[b[best],b[i]];const d=a[i][i];if(Math.abs(d)<1e-10)return null;for(let k=i;k<8;k++)a[i][k]/=d;b[i]/=d;for(let j=0;j<8;j++)if(j!==i){const f=a[j][i];for(let k=i;k<8;k++)a[j][k]-=f*a[i][k];b[j]-=f*b[i];}}return (u,v)=>{const d=b[6]*u+b[7]*v+1;return [(b[0]*u+b[1]*v+b[2])/d,(b[3]*u+b[4]*v+b[5])/d];};}
+    function warpHomeDoor(ctx,finished){
+      const points=homePhoto.corners,forward=photoHomography(points);if(!forward)return;
+      const a=forward(0,0),b=forward(1,0),c=forward(1,1),d=forward(0,1);
+      // Solve the inverse mapping directly so the finished image has no mesh seams.
+      const rows=[],values=[];points.forEach(([x,y],i)=>{const [u,v]=[[0,0],[1,0],[1,1],[0,1]][i];rows.push([x,y,1,0,0,0,-u*x,-u*y]);values.push(u);rows.push([0,0,0,x,y,1,-v*x,-v*y]);values.push(v);});
+      for(let i=0;i<8;i++){let best=i;for(let j=i+1;j<8;j++)if(Math.abs(rows[j][i])>Math.abs(rows[best][i]))best=j;[rows[i],rows[best]]=[rows[best],rows[i]];[values[i],values[best]]=[values[best],values[i]];const n=rows[i][i];if(Math.abs(n)<1e-10)return;for(let k=i;k<8;k++)rows[i][k]/=n;values[i]/=n;for(let j=0;j<8;j++)if(j!==i){const f=rows[j][i];for(let k=i;k<8;k++)rows[j][k]-=f*rows[i][k];values[j]-=f*values[i];}}
+      const source=homePhoto.doorPixels;if(!source)return;const sw=source.width,sh=source.height,data=source.data;
+      const minX=Math.max(0,Math.floor(Math.min(...points.map(p=>p[0])))),minY=Math.max(0,Math.floor(Math.min(...points.map(p=>p[1]))));const width=Math.min(photoCanvas.width,Math.ceil(Math.max(...points.map(p=>p[0]))))-minX,height=Math.min(photoCanvas.height,Math.ceil(Math.max(...points.map(p=>p[1]))))-minY;
+      const warped=document.createElement('canvas');warped.width=width;warped.height=height;const wc=warped.getContext('2d'),pixels=wc.createImageData(width,height),out=pixels.data;
+      for(let y=0;y<height;y++)for(let x=0;x<width;x++){const px=x+minX+.5,py=y+minY+.5,den=values[6]*px+values[7]*py+1,u=(values[0]*px+values[1]*py+values[2])/den,v=(values[3]*px+values[4]*py+values[5])/den;if(u<0||u>1||v<0||v>1)continue;const sx=u*(sw-1),sy=v*(sh-1),ix=Math.floor(sx),iy=Math.floor(sy),fx=sx-ix,fy=sy-iy,ix2=Math.min(sw-1,ix+1),iy2=Math.min(sh-1,iy+1),dst=(y*width+x)*4;for(let channel=0;channel<4;channel++)out[dst+channel]=data[(iy*sw+ix)*4+channel]*(1-fx)*(1-fy)+data[(iy*sw+ix2)*4+channel]*fx*(1-fy)+data[(iy2*sw+ix)*4+channel]*(1-fx)*fy+data[(iy2*sw+ix2)*4+channel]*fx*fy;}
+      wc.putImageData(pixels,0,0);ctx.save();ctx.globalAlpha=finished?1:Number(document.getElementById('photo-opacity').value)/100;const shadow=Number(document.getElementById('photo-shadow').value);if(shadow){ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=shadow*photoCanvas.width/1000;ctx.shadowOffsetY=shadow*photoCanvas.width/4000;}ctx.filter=`brightness(${document.getElementById('photo-brightness').value}%)`;ctx.drawImage(warped,minX,minY);ctx.restore();
+    }
+    function drawHomePhoto(finished=false,target=photoCanvas){if(!homePhoto.image)return;const ctx=target.getContext('2d');ctx.clearRect(0,0,target.width,target.height);ctx.drawImage(homePhoto.image,0,0,target.width,target.height);if(homePhoto.door&&(finished||!homePhoto.before))warpHomeDoor(ctx,finished);if(!finished){const visible=!homePhoto.before;document.getElementById('photo-handles').hidden=!visible;const handles=[...document.querySelectorAll('.photo-handle')];handles.forEach((el,i)=>{el.style.left=(homePhoto.corners[i][0]/target.width*100)+'%';el.style.top=(homePhoto.corners[i][1]/target.height*100)+'%';});if(visible){ctx.save();ctx.beginPath();homePhoto.corners.forEach(([x,y],i)=>ctx[i?'lineTo':'moveTo'](x,y));ctx.closePath();ctx.strokeStyle='#00a4df';ctx.lineWidth=Math.max(2,target.width/600);ctx.setLineDash([target.width/80,target.width/120]);ctx.stroke();ctx.restore();}}}
+    function refreshHomeDoor(){const version=++homePhoto.version;const ready=!!homePhoto.image&&!!selected('door-style');['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=!ready);if(!homePhoto.image)return;homePhoto.door=null;if(!selected('door-style')){drawHomePhoto();photoMessage('Choose a door style above to show it on the photo.');return;}const svg=previewSVG('homePhotoDoor','exterior',true);const img=new Image();homePhoto.loading=new Promise(resolve=>{img.onload=()=>{try{if(version===homePhoto.version){homePhoto.door=img;const source=document.createElement('canvas');source.width=img.width;source.height=img.height;const sc=source.getContext('2d');sc.drawImage(img,0,0);homePhoto.doorPixels=sc.getImageData(0,0,source.width,source.height);drawHomePhoto();photoMessage('Drag the numbered corners to the outside of the door frame. Include selected sidelites in the opening. Your exterior design stays in sync.');}}catch(e){homePhoto.door=null;photoMessage('The door rendering could not be prepared. Try selecting the style again.');['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=true);}resolve();};img.onerror=()=>{if(version===homePhoto.version){photoMessage('The door preview could not be loaded. Try selecting the style again.');['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=true);}resolve();};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
+    document.getElementById('home-photo-upload').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;const version=++homePhoto.uploadVersion;event.target.value='';if(file.size>25*1024*1024){photoMessage('Please choose a photo smaller than 25 MB.');return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){photoMessage('Please choose a JPG, PNG or WebP photo.');return;}const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();if(version!==homePhoto.uploadVersion)return;const factor=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));photoCanvas.width=Math.round(img.naturalWidth*factor);photoCanvas.height=Math.round(img.naturalHeight*factor);homePhoto.image=img;homePhoto.before=false;photoCanvas.hidden=false;document.getElementById('photo-empty').hidden=true;photoControls.forEach(id=>document.getElementById(id).disabled=false);document.getElementById('photo-before').textContent='Show Original';document.getElementById('photo-before').setAttribute('aria-pressed','false');resetPhotoPlacement();refreshHomeDoor();}catch(e){photoMessage('This photo could not be opened. Try a JPG or PNG image.');}finally{URL.revokeObjectURL(url);}});
+    let photoDrag=null;
+    function photoPoint(event){const r=photoCanvas.getBoundingClientRect();return [(event.clientX-r.left)*photoCanvas.width/r.width,(event.clientY-r.top)*photoCanvas.height/r.height];}
+    function inPhotoOpening(p){const polygon=homePhoto.corners;return polygon.every((a,i)=>{const b=polygon[(i+1)%4];return (b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0])>=0;});}
+    photoStage.addEventListener('pointerdown',event=>{if(!homePhoto.image||homePhoto.before)return;const button=event.target.closest('.photo-handle'),p=photoPoint(event);if(!button&&!inPhotoOpening(p))return;event.preventDefault();if(button)button.focus();photoDrag={corner:button?Number(button.dataset.corner):null,start:p,points:homePhoto.corners.map(p=>[...p])};photoStage.setPointerCapture(event.pointerId);});
+    photoStage.addEventListener('pointermove',event=>{if(!photoDrag)return;const p=photoPoint(event),dx=p[0]-photoDrag.start[0],dy=p[1]-photoDrag.start[1];let points=photoDrag.points.map(p=>[...p]);if(photoDrag.corner===null){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);const x=Math.max(-Math.min(...xs),Math.min(dx,photoCanvas.width-Math.max(...xs))),y=Math.max(-Math.min(...ys),Math.min(dy,photoCanvas.height-Math.max(...ys)));points=points.map(([px,py])=>[px+x,py+y]);}else{const c=photoDrag.corner;points[c]=[Math.max(1,Math.min(photoCanvas.width-1,points[c][0]+dx)),Math.max(1,Math.min(photoCanvas.height-1,points[c][1]+dy))];}if(validPhotoCorners(points)){homePhoto.corners=points;drawHomePhoto();}});
+    for(const event of ['pointerup','pointercancel','lostpointercapture'])photoStage.addEventListener(event,()=>photoDrag=null);
+    document.querySelectorAll('.photo-handle').forEach(button=>button.addEventListener('keydown',event=>{const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[event.key];if(!d||!homePhoto.image)return;event.preventDefault();const scale=(event.shiftKey?10:1)*photoCanvas.width/photoCanvas.getBoundingClientRect().width;const points=homePhoto.corners.map(p=>[...p]),c=Number(button.dataset.corner);points[c]=[Math.max(1,Math.min(photoCanvas.width-1,points[c][0]+d[0]*scale)),Math.max(1,Math.min(photoCanvas.height-1,points[c][1]+d[1]*scale))];if(validPhotoCorners(points)){homePhoto.corners=points;drawHomePhoto();}}));
+    ['photo-brightness','photo-shadow','photo-opacity'].forEach(id=>document.getElementById(id).addEventListener('input',()=>drawHomePhoto()));
+    document.getElementById('photo-fit-reset').addEventListener('click',resetPhotoPlacement);
+    document.getElementById('photo-before').addEventListener('click',event=>{homePhoto.before=!homePhoto.before;event.target.textContent=homePhoto.before?'Show New Door':'Show Original';event.target.setAttribute('aria-pressed',String(homePhoto.before));drawHomePhoto();});
+    document.getElementById('photo-remove').addEventListener('click',()=>{homePhoto.uploadVersion++;homePhoto.version++;homePhoto.image=null;homePhoto.door=null;homePhoto.corners=[];homePhoto.before=false;photoCanvas.hidden=true;document.getElementById('photo-empty').hidden=false;document.getElementById('photo-handles').hidden=true;[...photoControls,'photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=true);document.getElementById('photo-print-sheet').replaceChildren();photoMessage('Photo removed. Upload another photo whenever you are ready.');});
+    async function finishedHomePhoto(){await homePhoto.loading;if(!homePhoto.image||!homePhoto.door||!selected('door-style'))throw Error('Choose a door style and upload a photo first.');const canvas=document.createElement('canvas');canvas.width=photoCanvas.width;canvas.height=photoCanvas.height;drawHomePhoto(true,canvas);return canvas;}
+    document.getElementById('photo-download').addEventListener('click',async()=>{try{const canvas=await finishedHomePhoto();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('Could not create the rendering.');const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='Koehler-Door-On-Your-Home.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);photoMessage('Rendering downloaded without alignment guides.');}catch(e){photoMessage(e.message);}});
+    document.getElementById('photo-print').addEventListener('click',async()=>{try{const canvas=await finishedHomePhoto();const image=document.createElement('img');image.src=canvas.toDataURL('image/png');image.alt='Configured exterior door on the home photo';const sheet=document.getElementById('photo-print-sheet');sheet.innerHTML=`<h1>Koehler Home Improvement · Your New Entrance</h1><p>${escapeHTML(selected('door-style').dataset.label||selected('door-style').value)} · ${escapeHTML(catalogFinishDetails('exterior'))}</p>`;sheet.append(image);const note=document.createElement('p');note.textContent='Design concept. Verify final measurements, colors, product availability and installation details before ordering.';sheet.append(note);await image.decode();document.body.classList.add('photo-print');window.print();}catch(e){photoMessage(e.message);}});
+    window.addEventListener('afterprint',()=>document.body.classList.remove('photo-print'));
 
     initFinishPicker();
     renderGlassDesigns();
