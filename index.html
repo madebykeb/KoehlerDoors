@@ -69,14 +69,20 @@
     .glass-choice strong { color:var(--blue); font-size:.92rem; line-height:1.2; text-align:center; }
     .style-section { display:none; }
     .style-intro { margin:-7px 0 16px; color:var(--muted); font-size:.92rem; }
-    .style-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; }
+    .style-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
     .style-choice { position:relative; }
     .style-choice input { position:absolute; opacity:0; pointer-events:none; }
-    .style-choice label { display:flex; min-height:188px; padding:10px 8px 9px; flex-direction:column; align-items:center; justify-content:space-between; border:2px solid var(--line); border-radius:12px; background:white; cursor:pointer; transition:.15s; }
+    .style-choice label { display:flex; min-height:290px; padding:12px 10px 15px; flex-direction:column; align-items:center; justify-content:space-between; border:2px solid var(--line); border-radius:12px; background:white; cursor:pointer; transition:.15s; }
     .style-choice label:hover { border-color:#8eb4d1; transform:translateY(-1px); }
     .style-choice input:checked + label { border-color:var(--blue); background:#edf6fc; box-shadow:inset 0 0 0 1px var(--blue); }
     .style-choice img { width:100%; height:135px; object-fit:contain; mix-blend-mode:multiply; }
     .style-choice strong { color:var(--blue); font-size:.86rem; letter-spacing:.02em; }
+    .style-art { display:block; width:100%; background:linear-gradient(145deg,#eeefe9,#e0e6e0); border-radius:7px; margin-bottom:11px; }
+    .style-art svg { display:block; height:205px; width:100%; }
+    .style-family { font-size:.68rem; color:#60716a; text-align:center; }
+    .style-code { font-size:.73rem; color:#60716a; margin-top:5px; }
+    .style-choice input:focus-visible + label { outline:3px solid #e6b64e; outline-offset:3px; }
+    .style-choice input:checked + label::after { content:"✓"; position:absolute; top:19px; right:17px; border-radius:50%; background:var(--blue); color:white; padding:2px 6px; }
     .style-empty { grid-column:1/-1; margin:0; padding:16px; color:var(--muted); background:var(--paper); border:1px dashed #aabccc; border-radius:11px; }
     .style-height-note { margin:13px 0 0; color:var(--muted); font-size:.82rem; }
     .disabled { opacity:.45; }
@@ -95,7 +101,7 @@
     .copy-notes:hover { background:#eaf5fc; }
     .copy-status { min-height:1.2em; margin:8px 0 0; color:#a9defc; font-size:.82rem; text-align:center; }
     .fine { margin:14px 0 0; color:#c9d7cd; font-size:.78rem; }
-    @media (max-width:760px) { main { grid-template-columns:1fr; padding:18px 14px 35px; } .result { position:static; grid-row:1; } .door-grid { grid-template-columns:1fr; } .choice label { min-height:0; } .size-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .style-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .glass-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .style-choice label { min-height:158px; } .style-choice img { height:108px; } .glass-choice label { min-height:205px; } .glass-choice img { height:155px; } .header-inner { padding:17px 16px; } .brand-logo { width:112px; } .section { padding:19px; } }
+    @media (max-width:760px) { main { grid-template-columns:1fr; padding:18px 14px 35px; } .result { position:static; grid-row:1; } .door-grid { grid-template-columns:1fr; } .choice label { min-height:0; } .size-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .style-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .glass-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .style-choice label { min-height:270px; } .style-choice img { height:108px; } .glass-choice label { min-height:205px; } .glass-choice img { height:155px; } .header-inner { padding:17px 16px; } .brand-logo { width:112px; } .section { padding:19px; } }
     @media (max-width:430px) { .style-grid,.glass-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 
     [hidden] {display:none!important}
@@ -206,8 +212,8 @@
       <section class="section">
         <h2>1. Choose the base door</h2>
         <div class="door-grid">
-          <div class="choice"><input type="radio" name="door" id="single-panel" value="2850" data-label="Single 6-panel door"><label for="single-panel"><strong>Single 6-Panel Door</strong><span>$2,850</span></label></div>
-          <div class="choice"><input type="radio" name="door" id="double-panel" value="4700" data-label="Double 6-panel door"><label for="double-panel"><strong>Double 6-Panel Door</strong><span>$4,700</span></label></div>
+          <div class="choice"><input type="radio" name="door" id="single-panel" value="2850" data-label="Single solid / panel door"><label for="single-panel"><strong>Single Solid / Panel Door</strong><span>$2,850</span></label></div>
+          <div class="choice"><input type="radio" name="door" id="double-panel" value="4700" data-label="Double solid / panel door"><label for="double-panel"><strong>Double Solid / Panel Door</strong><span>$4,700</span></label></div>
           <div class="choice"><input type="radio" name="door" id="single-lite" value="3300" data-label="Single full, half or ¾-lite door" data-glass="true"><label for="single-lite"><strong>Single Full / Half / ¾-Lite</strong><span>$3,300</span></label></div>
           <div class="choice"><input type="radio" name="door" id="double-lite" value="5600" data-label="Double full, half or ¾-lite door" data-glass="true"><label for="double-lite"><strong>Double Full / Half / ¾-Lite</strong><span>$5,600</span></label></div>
         </div>
@@ -232,7 +238,7 @@
       </section>
       <section class="section style-section" id="door-style-section">
         <h2>4. Choose the door style</h2>
-        <p class="style-intro">Select any catalog configuration by picture and model code. Every listed style is included in the base door price.</p>
+        <p class="style-intro">Choose a design for your selected door type and height. Solid styles show the catalog product family; glass styles show the configuration code.</p>
         <div class="style-grid" id="style-grid"></div>
         <p class="style-height-note">Catalog availability can vary by glass design, material, width and impact rating. Confirm the final model before ordering.</p>
       </section>
@@ -305,6 +311,37 @@
       ['228-4','68'],['137-4','68'],['135-4','68'],['217-2','68'],['160-2','68'],['106-1','68'],['106-1P','68'],['106-2','68'],['126-1','68'],['304-2','68'],['420-1','68'],['404-1','68'],['426-1','68'],['300-X','68'],['120-X','68'],['122-X','68'],['926-X','68'],
       ['217-2','80'],['404-1','80'],['404-1P','80'],['404-2','80'],['120-1','80'],['122-1','80'],['122-2','80'],['926-1','80'],['820-X','80'],['810-X','80'],['826-X','80']
     ];
+
+    const solidLayouts = {
+      six:{panels:[[.16,.09,.29,.13],[.55,.09,.29,.13],[.16,.29,.29,.29],[.55,.29,.29,.29],[.16,.66,.29,.23],[.55,.66,.29,.23]]},
+      flush:{panels:[]}, square:{panels:[[.16,.09,.68,.49],[.16,.66,.68,.23]]},
+      roman:{panels:[[.16,.09,.68,.49],[.16,.66,.68,.23]],archPanel:true},
+      plank:{panels:[[.16,.09,.68,.49],[.16,.66,.68,.23]],archPanel:true,fluted:true},
+      blank:{panels:[[.16,.29,.29,.29],[.55,.29,.29,.29],[.16,.66,.29,.23],[.55,.66,.29,.23]]},
+      craftsman:{panels:[[.15,.09,.70,.16],[.15,.34,.18,.55],[.41,.34,.18,.55],[.67,.34,.18,.55]]},
+      hollister:{panels:[[.16,.09,.68,.56],[.16,.75,.68,.14]]}
+    };
+    const solidCatalog=[];
+    const solidNames={six:'6 Panel',flush:'Flush',square:'2 Panel Square',roman:'2 Panel Roman',plank:'Cheyenne 2 Panel Plank',blank:'4 Panel Blank-Top',craftsman:'Craftsman 3 Panel',hollister:'Hollister 2 Panel'};
+    const families=[
+      ['BLS','Belleville Smooth',['flush','six','square','plank','blank'],['flush','six','square','plank']],
+      ['BMT','Belleville Mahogany',['six','plank'],['six']],
+      ['BLT','Belleville Oak',['flush','six','blank'],['flush','six']],
+      ['SGS','Storm Guard Smooth',['flush','six','square','plank','blank'],['flush','six','square','plank']],
+      ['SGM','Storm Guard Mahogany',['six','plank'],['six']],
+      ['HGS','Heritage Smooth',['craftsman'],['craftsman']],
+      ['HFT','Heritage Fir',['craftsman'],['craftsman']],
+      ['MHD','Masonite HD Steel',['flush','six','square','roman','blank','hollister','craftsman'],['flush','six','square']]
+    ];
+    families.forEach(([prefix,family,a,b])=>[['68',a],['80',b]].forEach(([height,keys])=>keys.forEach(key=>solidCatalog.push({code:prefix+' / '+solidNames[key],height,key,family,prefix}))));
+    function styleDrawing(layout,code) {
+      const panelPath=(x,y,w,h,arch)=>arch?`M${x} ${y+8} Q${x+w/2} ${y-5} ${x+w} ${y+8} V${y+h} H${x}Z`:`M${x} ${y}H${x+w}V${y+h}H${x}Z`;
+      let parts='';
+      (layout.panels||[]).forEach((r,i)=>{const [x,y,w,h]=[24+r[0]*92,12+r[1]*204,r[2]*92,r[3]*204];parts+=`<path d="${panelPath(x,y,w,h,layout.archPanel&&i===0)}" fill="#e5e6e3" stroke="#89948f" stroke-width="1.5"/><path d="${panelPath(x+3,y+3,w-6,h-6,layout.archPanel&&i===0)}" fill="#f8f8f4" stroke="#fff"/>`;if(layout.fluted)for(let k=x+7;k<x+w-4;k+=7)parts+=`<path d="M${k} ${y+10}V${y+h-5}" stroke="#a6afaa" stroke-width=".8"/>`;});
+      if(layout.glass){const r=layout.glass,[x,y,w,h]=[24+r[0]*92,12+r[1]*204,r[2]*92,r[3]*204];parts+=layout.shape==='oval'?`<ellipse cx="${x+w/2}" cy="${y+h/2}" rx="${w/2}" ry="${h/2}" fill="#a7bdba" stroke="#fafaf6" stroke-width="4"/>`:`<path d="${panelPath(x,y,w,h,layout.shape==='arch')}" fill="#a7bdba" stroke="#fafaf6" stroke-width="4"/>`;}
+      return `<svg viewBox="0 0 140 230" role="img" aria-label="${escapeHTML(code)} door illustration"><rect x="20" y="11" width="99" height="210" rx="2" fill="#203d35" opacity=".12"/><rect x="24" y="12" width="92" height="204" fill="#f0f1ec" stroke="#a5aea7"/>${parts}<circle cx="108" cy="118" r="2" fill="#38443e"/><path d="M108 119v9" stroke="#38443e" stroke-width="2"/></svg>`;
+    }
+    let styleGridKey='';
     const glassCatalog = [
       ['Alston','alston','Decorative Glass'],['Chelsea','chelsea','Decorative Glass'],['Iron Springs','iron-springs','Decorative Glass'],['Ventata','ventata','Decorative Glass'],
       ['Frontier','frontier','Decorative Glass'],['Kordella','kordella','Decorative Glass'],['Naples','naples','Decorative Glass'],['Cruz','cruz','Decorative Glass'],
@@ -377,11 +414,7 @@
         if (!allowed) input.checked = false;
       });
       const styleSection = document.getElementById('door-style-section');
-      styleSection.style.display = allowed ? 'block' : 'none';
-      styleSection.querySelectorAll('input').forEach(input => {
-        input.disabled = !allowed;
-        if (!allowed) input.checked = false;
-      });
+      styleSection.style.display = door ? 'block' : 'none';
       document.getElementById('glass-note').style.display = door && !allowed ? 'block' : 'none';
       document.querySelectorAll('input[name="decorative-design"]').forEach(input => {
         input.disabled = !allowed;
@@ -402,17 +435,17 @@
     }
 
     function updateDoorStyles() {
-      const height = form.querySelector('input[name="height"]:checked')?.id;
-      const wanted = height === 'h80' ? '80' : '68';
-      const current = form.querySelector('input[name="door-style"]:checked')?.dataset.code;
-      const styles = styleCatalog.filter(([,h]) => h === wanted);
-      const grid = document.getElementById('style-grid');
-      grid.innerHTML = styles.length ? styles.map(([code,h]) => {
-        const suffix = h === '80' && ['217-2','404-1','617-1','450-1'].includes(code) ? '-80' : '';
-        const id = `style-${code.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${h}`;
-        const checked = current === code ? ' checked' : '';
-        return `<div class="style-choice"><input type="radio" name="door-style" id="${id}" value="${code}" data-code="${code}"${checked}><label for="${id}"><img src="${styleImages[`${code}-${h}`]}" alt="Door style ${code}" loading="lazy"><strong>${code} · ${h === '80' ? '8′0″' : '6′8″'}</strong></label></div>`;
-      }).join('') : '<p class="style-empty">No matching catalog styles are shown for this glass and height.</p>';
+      const wanted=selected('height')?.id==='h80'?'80':'68';
+      const lite=selected('door')?.dataset.glass==='true';
+      const key=wanted+'|'+lite;
+      if(styleGridKey===key)return;
+      const current=selected('door-style')?.value;
+      const styles=lite?styleCatalog.filter(([,h])=>h===wanted).map(([code,height])=>({code,height,family:'Glass door configuration'})):solidCatalog.filter(x=>x.height===wanted);
+      styleGridKey=key;
+      document.getElementById('style-grid').innerHTML=styles.map(x=>{
+        const id='style-'+x.code.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+x.height;
+        return `<div class="style-choice"><input type="radio" name="door-style" id="${id}" value="${escapeHTML(x.code)}" data-code="${escapeHTML(x.code)}" data-label="${escapeHTML(x.code+' — '+x.family)}" ${current===x.code?'checked':''}><label for="${id}"><span class="style-art">${styleDrawing(x.key?solidLayouts[x.key]:modelLayouts[x.code],x.code)}</span><span class="style-family">${x.family}</span><strong>${x.key?solidNames[x.key]:x.code}</strong><span class="style-code">${x.prefix||x.code} · ${wanted==='80'?'8′0″':'6′8″'} · ${lite?'Glass':'Solid'}</span></label></div>`;
+      }).join('');
     }
 
     function calculate() {
@@ -528,6 +561,7 @@
       '106-2': {glass:[.18,.12,.64,.46],panels:[[.18,.67,.25,.20],[.57,.67,.25,.20]]},
       '126-1': {glass:[.15,.055,.70,.63],panels:[[.15,.75,.70,.17]]},
       '304-2': {glass:[.23,.12,.54,.53],shape:'oval',panels:[[.20,.74,.60,.13]]},
+      '426-1': {glass:[.15,.055,.70,.63],panels:[[.15,.75,.70,.17]]},
       '420-1': {glass:[.15,.055,.70,.70],panels:[[.15,.82,.70,.11]]},
       '404-1': {glass:[.19,.12,.62,.55],panels:[[.19,.76,.62,.11]]},
       '404-1P': {glass:[.19,.12,.62,.55],fluted:true,panels:[[.19,.76,.62,.11]]},
@@ -562,7 +596,8 @@
       const interior=(forcedView||document.getElementById('preview-view').value)==='interior';
       const double=door.id.startsWith('double'), lite=door.dataset.glass==='true';
       const style=selected('door-style')?.value;
-      const shape=lite?(modelLayouts[style]||{glass:[.15,.08,.70,.82],panels:[]}):{panels:[[.15,.10,.30,.15],[.55,.10,.30,.15],[.15,.32,.30,.25],[.55,.32,.30,.25],[.15,.64,.30,.24],[.55,.64,.30,.24]]};
+      const solidStyle=solidCatalog.find(x=>x.code===style);
+      const shape=lite?(modelLayouts[style]||{glass:[.15,.08,.70,.82],panels:[]}):(solidLayouts[solidStyle?.key]||solidLayouts.six);
       const widthMap={w36:42,w30:36,w210:34,w28:32,w26:30,w24:28,w20:24};
       const slabW=widthMap[selected('width')?.id]||36;
       let slabH=selected('height')?.id==='h80'?96:80;
@@ -607,7 +642,8 @@
         <pattern id="${id('frostDots')}" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".65" fill="#fff" opacity=".4"/></pattern>
       </defs>`;
       let serial=0;
-      function panel(x,y,w,h,fluted=false) {
+      function panel(x,y,w,h,fluted=false,arched=false) {
+        if(arched){const path=(n)=>`M${x+n} ${y+12+n} Q${x+w/2} ${y-8+n} ${x+w-n} ${y+12+n} V${y+h-n} H${x+n}Z`;let out=`<path d="${path(0)}" fill="${dark}"/><path d="${path(2.5)}" fill="${light}"/><path d="${path(5)}" fill="${url('face')}"/>`;if(fluted)for(let xx=x+10;xx<x+w-8;xx+=7)out+=`<path d="M${xx} ${y+17}v${h-24}" stroke="${dark}" opacity=".6"/>`;return out;}
         let out=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.8" fill="${dark}"/><rect x="${x+2.5}" y="${y+2.5}" width="${w-5}" height="${h-5}" rx="1.1" fill="${light}"/><rect x="${x+5}" y="${y+5}" width="${w-10}" height="${h-10}" rx="1" fill="${url('face')}"/><path d="M${x+4} ${y+h-4} V${y+4} H${x+w-4}" fill="none" stroke="${shade(color,.45)}" stroke-width="1" opacity=".7"/>`;
         if(grain) out+=`<rect x="${x+5}" y="${y+5}" width="${w-10}" height="${h-10}" fill="${url('grain')}"/>`;
         if(fluted) for(let xx=x+10;xx<x+w-8;xx+=7) out+=`<path d="M${xx} ${y+8}v${h-16}" stroke="${dark}" stroke-width="1"/><path d="M${xx+1.7} ${y+8}v${h-16}" stroke="${light}" stroke-width="1"/>`;
@@ -654,7 +690,7 @@
         if(grain)out+=`<rect x="${x+1}" y="1" width="${w-2}" height="${H-2}" fill="${url('grain')}"/>`;
         if(side) out+=glassInsert(x+2.1*scale,7*scale,w-4.2*scale,H-14*scale);
         else {
-          for(const r of shape.panels)out+=panel(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.fluted);
+          for(const [index,r] of shape.panels.entries())out+=panel(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.fluted,shape.archPanel&&index===0);
           if(shape.glass) {const r=shape.glass;out+=glassInsert(x+r[0]*w,r[1]*H,r[2]*w,r[3]*H,shape.shape,shape.arch?shape.arch*H:0);}
           const active=!double||(index===(activeLeft?0:1));
           const hingeRight=double?index===1:orderValue('hinge')==='Right';
@@ -676,7 +712,7 @@
       if(left){body+=leaf(x,leftW*scale,true);x+=(leftW+1.2)*scale;}
       for(let i=0;i<leafCount;i++){body+=leaf(x,dw,false,i);x+=dw;}
       if(right){x+=1.2*scale;body+=leaf(x,rightW*scale,true);}
-      const label=lite?(style?'MODEL '+style:'SELECT A CATALOG STYLE'):'6-PANEL';
+      const label=style?style.toUpperCase():'SELECT A CATALOG STYLE';
       const dims=(double?2+' × ':'')+slabW+'″ × '+slabH+'″';
       const badge=document.getElementById('impact').checked?'<path d="M14 0l12 5v10c0 9-12 15-12 15S2 24 2 15V5Z" fill="#e9f3ee" stroke="#4c7a69"/><path d="m8 14 4 4 8-9" fill="none" stroke="#356d53" stroke-width="2.5"/>':'';
       const mirror=interior?`translate(${W} 0) scale(-1 1)`:'';
@@ -828,7 +864,9 @@
       document.getElementById('preview-summary').innerHTML=tags.map(t=>`<span>${escapeHTML(t)}</span>`).join('');
       const notes=[];
       const door=selected('door');
-      if(door?.dataset.glass==='true'&&!style)notes.push('Choose a catalog door style to set the glass and panel layout.');
+      if(door&&!style)notes.push('Choose a catalog door style to set the panel and glass layout.');
+      const solidModel=solidCatalog.find(x=>x.code===style);
+      if(solidModel){const width={w36:42,w30:36,w210:34,w28:32,w26:30,w24:28,w20:24}[selected('width')?.id];const narrow=['flush','six'].includes(solidModel.key)||solidModel.prefix==='MHD'&&solidModel.key==='blank';if(width>36||width<32&&!narrow||solidModel.prefix==='MHD'&&solidModel.height==='80'&&solidModel.key==='square'&&width!==36)notes.push('The selected solid model is not listed at this width in the catalog. Confirm a supported slab width before ordering.');if(selected('height')?.id==='cut-down')notes.push('Confirm that the selected panel design can be cut down to the requested height.');}
       if(glass?.id==='decorative'&&!selected('decorative-design'))notes.push('Choose a decorative or textured glass design.');
       if(door?.dataset.glass==='true') {
         const layout=modelLayouts[style]||{glass:[.15,.08,.7,.82]};
@@ -843,7 +881,9 @@
     }
     function orderRows() {
       const door=selected('door'), glass=selected('glass-style');
-      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value|| (door?.dataset.glass==='true'?'To be confirmed':'6-panel; confirm manufacturer model')],['Sidelites',selected('sidelite')?.dataset.label],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
+      const solidModel=solidCatalog.find(x=>x.code===selected('door-style')?.value);
+      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',selected('sidelite')?.dataset.label],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
+      if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family]);
       const fields=[["customer", "Customer / job name"], ["address", "Job address"], ["order-number", "Order / PO number"], ["prepared-by", "Prepared by"], ["manufacturer", "Manufacturer / product line"], ["material", "Door material"], ["unit-size", "Overall frame size (W \u00d7 H)"], ["rough-opening", "Rough opening (W \u00d7 H)"], ["actual-height", "Actual slab height / cut-down"], ["jamb", "Jamb depth"], ["exterior-color", "Exterior finish / color"], ["interior-color", "Interior finish / color"], ["sidelite-width", "Sidelite width(s)"], ["glass-size", "Glass insert size / model"], ["hardware", "Hardware / bore preparation"], ["approval", "Impact product approval / DP"]];
       fields.forEach(([id,label])=>rows.push([label,id==='exterior-color'?catalogFinishDetails('exterior'):id==='interior-color'?catalogFinishDetails('interior'):(orderValue(id)||'To be confirmed')]));
       rows.push(['Swing',orderValue('swing')||'To be confirmed'],['Hinge side (exterior view)',orderValue('hinge')||'To be confirmed']);
