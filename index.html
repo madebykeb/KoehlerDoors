@@ -126,7 +126,7 @@
       .print-layout {display:grid;grid-template-columns:220px 1fr;gap:20px}
       .print-layout > div > svg {width:210px;height:290px}
       .print-table {width:100%;border-collapse:collapse;line-height:1.25}
-      .print-table th,.print-table td {padding:3px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+      .print-table th,.print-table td {padding:2.5px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top;overflow-wrap:anywhere}
       .print-table th {width:36%}
       .print-table tr {break-inside:avoid}
       .print-note {white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
@@ -292,6 +292,12 @@
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="blinds" value="1475" data-single-price="1475" data-label="Blinds between glass" disabled><label for="blinds">Blinds Between Glass</label></div><span class="price dynamic-price">+$1,475</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="gbg" value="600" data-label="GBG grids" disabled><label for="gbg">Grids (GBG)</label></div><span class="price">+$600</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="sdl" value="1200" data-label="SDL grids" disabled><label for="sdl">SDL</label></div><span class="price">+$1,200</span></div>
+          <div class="sidelite-settings" id="grid-pattern-controls" hidden>
+            <p class="sub-option-title">Choose the Lite Pattern</p>
+            <p class="sub-option-help">Choose the number of panes for GBG or SDL. Patterns marked custom require manufacturer confirmation.</p>
+            <div class="order-grid"><label>Door grid pattern<select id="order-door-grid"><option value="">Choose a pattern</option></select></label><label id="sidelite-grid-control">Sidelite grid pattern<select id="order-sidelite-grid"><option value="">Choose a pattern</option></select></label></div>
+            <div id="grid-pattern-picture" style="max-width:130px;margin:12px auto"></div>
+          </div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="no-sidelites" value="0" data-label="No sidelites" checked><label for="no-sidelites">No Sidelites</label></div><span class="price">Included</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="one-sidelite" value="1200" data-label="One sidelite"><label for="one-sidelite">One Sidelite</label></div><span class="price">+$1,200</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="two-sidelites" value="2400" data-label="Two sidelites"><label for="two-sidelites">Two Sidelites</label></div><span class="price">+$2,400</span></div>
@@ -320,6 +326,7 @@
 <details class="finish-coverage"><summary>Catalog coverage and sources</summary><p>Embedded catalog: 1,946 published U.S. paint colors, including Designer and archived colors, and 295 published interior/exterior wood-stain colors. Retrieved October 8, 2026. The selectors work offline.</p><p>Stain colors are grouped by the product lines that publish swatches. Three additional listed Minwax product lines publish no swatches on the Sherwin-Williams catalog page and are not included. Concrete stains, industrial coatings and custom color mixes are outside this door catalog. Use the ordering fields for a separately confirmed custom finish.</p><p><a href="https://www.sherwin-williams.com/painting-contractors/colorsnap-studio-for-ipad/color-tools/downloadable-color-palettes" target="_blank" rel="noopener">Official paint data</a> · <a href="https://www.sherwin-williams.com/en-us/color/color-family" target="_blank" rel="noopener">Current paint families</a> · <a href="https://www.sherwin-williams.com/homeowners/color/find-and-explore-colors/stain-colors/exterior-stains" target="_blank" rel="noopener">Exterior wood stains</a> · <a href="https://www.sherwin-williams.com/homeowners/color/find-and-explore-colors/stain-colors/interior-stains" target="_blank" rel="noopener">Interior wood stains</a></p></details></section>
 <section class="section"><h2>7. Ordering details</h2><p class="style-intro">Record final measurements and manufacturer details for the order sheet. These fields do not change pricing.</p><div class="order-grid"><label>Customer / job name<input id="order-customer" type="text" maxlength="300"></label><label>Job address<input id="order-address" type="text" maxlength="300"></label><label>Order / PO number<input id="order-order-number" type="text" maxlength="300"></label><label>Prepared by<input id="order-prepared-by" type="text" maxlength="300"></label><label>Manufacturer / product line<input id="order-manufacturer" type="text" maxlength="300"></label><label>Door material<input id="order-material" type="text" maxlength="300"></label><label>Overall frame size (W × H)<input id="order-unit-size" type="text" maxlength="300"></label><label>Rough opening (W × H)<input id="order-rough-opening" type="text" maxlength="300"></label><label>Actual slab height / cut-down<input id="order-actual-height" type="text" maxlength="300"></label><label>Jamb depth<input id="order-jamb" type="text" maxlength="300"></label><label>Exterior finish / color<input id="order-exterior-color" type="text" maxlength="300"></label><label>Interior finish / color<input id="order-interior-color" type="text" maxlength="300"></label><label>Sidelite width(s)<input id="order-sidelite-width" type="text" maxlength="300"></label><label>Glass insert size / model<input id="order-glass-size" type="text" maxlength="300"></label><label>Hardware / bore preparation<input id="order-hardware" type="text" maxlength="300"></label><label>Impact product approval / DP<input id="order-approval" type="text" maxlength="300"></label><label>Swing<select id="order-swing"><option value="">To be confirmed</option><option>In-swing</option><option>Out-swing</option></select></label>
 <label>Hinge side, viewed from exterior<select id="order-hinge"><option value="">To be confirmed</option><option>Left</option><option>Right</option></select></label>
+<label>Bore preparation<select id="order-bore"><option value="">To be confirmed</option><option value="Single Bore">Single Bore</option><option value="Double Bore">Double Bore — lockset and deadbolt</option></select></label>
 <label>Active leaf (double door), exterior view<select id="order-active"><option value="">To be confirmed</option><option>Left</option><option>Right</option></select></label>
 
 <label>Custom exterior color<input id="order-color" type="color" value="#f2f0e9"></label><label id="interior-custom-color">Custom interior color<input id="order-interior-preview-color" type="color" value="#f2f0e9"></label>
@@ -585,6 +592,25 @@
       if(!style)return `${type==='two-sidelites'?'Two sidelites':'One sidelite'} — style to be selected${type==='one-sidelite'?' — '+orderValue('side')+' of door (exterior view)':''}`;
       return `${type==='two-sidelites'?'Two':'One'} ${style?style.name+' ('+style.code+')':'sidelite style to be selected'} sidelite${type==='two-sidelites'?'s':' — '+orderValue('side')+' of door (exterior view)'}`;
     }
+    const doorGridPatterns=[{count:4,cols:2,rows:2},{count:6,cols:2,rows:3},{count:8,cols:2,rows:4},{count:9,cols:3,rows:3},{count:10,cols:2,rows:5},{count:12,cols:3,rows:4},{count:15,cols:3,rows:5},{count:18,cols:3,rows:6}];
+    const sideliteGridPatterns=[2,3,4,5,6].map(count=>({count,cols:1,rows:count}));
+    const listedGridPatterns={gbg:{'68':{'120-X':[10,15],'122-X':[10,15]},'80':{'122-1':[10,15],'820-X':[12,18],'810-X':[12,18]}},sdl:{'68':{'135-4':[5],'217-2':[3,6],'106-1':[9],'106-1P':[9],'106-2':[9],'120-X':[10],'122-X':[15]},'80':{'217-2':[3,6],'122-1':[15]}}};
+    let gridChoiceKey='';
+    function currentGrid(side=false){const value=orderValue(side?'sidelite-grid':'door-grid');return (side?sideliteGridPatterns:doorGridPatterns.concat([{count:3,cols:3,rows:1},{count:5,cols:5,rows:1}])).find(x=>String(x.count)===value)||null;}
+    function gridPatternSummary(side=false){const x=currentGrid(side);return x?`${x.count}-lite (${x.cols} across × ${x.rows} high)`:'To be selected';}
+    function updateGridControls(){
+      const kind=selected('glass-style')?.id,active=['gbg','sdl'].includes(kind),height=selected('height')?.id==='h80'?'80':'68',style=selected('door-style')?.value;
+      document.getElementById('grid-pattern-controls').hidden=!active;
+      document.getElementById('sidelite-grid-control').hidden=selected('sidelite')?.id==='no-sidelites';
+      const listed=listedGridPatterns[kind]?.[height]?.[style]||[],key=kind+'|'+height+'|'+style;
+      if(key!==gridChoiceKey){gridChoiceKey=key;const select=document.getElementById('order-door-grid'),previous=select.value;const patterns=doorGridPatterns.concat(listed.includes(3)?[{count:3,cols:3,rows:1}]:[],listed.includes(5)?[{count:5,cols:5,rows:1}]:[]).sort((a,b)=>a.count-b.count);
+        select.innerHTML='<option value="">Choose a pattern</option>'+patterns.map(x=>`<option value="${x.count}">${x.count}-Lite · ${x.cols} across × ${x.rows} high${listed.includes(x.count)?' · Catalog-listed':' · Custom / confirm availability'}</option>`).join('');if(patterns.some(x=>String(x.count)===previous))select.value=previous;
+      }
+      const sideSelect=document.getElementById('order-sidelite-grid');if(sideSelect.options.length===1)sideSelect.innerHTML+=sideliteGridPatterns.map(x=>`<option value="${x.count}">${x.count}-Lite · 1 across × ${x.rows} high · Confirm availability</option>`).join('');
+      document.getElementById('order-door-grid').disabled=!active;sideSelect.disabled=!active||selected('sidelite')?.id==='no-sidelites';
+      const x=currentGrid();let drawing='';if(x){drawing='<svg viewBox="0 0 100 145" aria-label="Grid pattern"><rect x="5" y="5" width="90" height="135" fill="#afc6cc" stroke="#849a9f"/>';for(let j=1;j<x.cols;j++)drawing+=`<path d="M${5+90*j/x.cols} 5v135" stroke="#fff" stroke-width="3"/>`;for(let j=1;j<x.rows;j++)drawing+=`<path d="M5 ${5+135*j/x.rows}h90" stroke="#fff" stroke-width="3"/>`;drawing+='</svg>';}
+      document.getElementById('grid-pattern-picture').innerHTML=drawing;
+    }
     function calculate() {
       updateGlassProtection();
       updateDoorStyles();
@@ -832,7 +858,7 @@
           }
           if(glass==='gbg'||glass==='sdl') {
             const gridColor=glass==='sdl'?color:'#efeee9',gridW=glass==='sdl'?4:2.4;
-            const rows=Math.max(2,Math.round(h/(w*.60))),cols=w>150?3:2;
+            const chosenGrid=currentGrid(isSidelite),rows=chosenGrid?.rows||1,cols=chosenGrid?.cols||1;
             for(let j=1;j<cols;j++) {const xx=x+w*j/cols;out+=`<path d="M${xx} ${y}v${h}" stroke="#263d3b" stroke-opacity=".23" stroke-width="${gridW+2}"/><path d="M${xx} ${y}v${h}" stroke="${gridColor}" stroke-width="${gridW}"/>`;}
             for(let j=1;j<rows;j++) {const yy=y+h*j/rows;out+=`<path d="M${x} ${yy}h${w}" stroke="#263d3b" stroke-opacity=".23" stroke-width="${gridW+2}"/><path d="M${x} ${yy}h${w}" stroke="${gridColor}" stroke-width="${gridW}"/>`;}
           }
@@ -862,7 +888,7 @@
           if(showHinges)for(const yy of [.18,.51,.82])out+=`<rect data-door-hinge="true" x="${hingeX-1}" y="${H*yy}" width="2" height="${4*scale}" rx="1" fill="${url('metal')}"/>`;
           if(active){
             const hy=H*.56;
-            out+=`<circle cx="${hx}" cy="${hy-7*scale}" r="${1.25*scale}" fill="${url('metal')}" stroke="#41484b" stroke-width=".7"/><path d="M${hx-.45*scale} ${hy-7*scale}h${.9*scale}" stroke="#25292b" stroke-width="1"/>`;
+            if(orderValue('bore')!=='Single Bore')out+=`<circle cx="${hx}" cy="${hy-7*scale}" r="${1.25*scale}" fill="${url('metal')}" stroke="#41484b" stroke-width=".7"/><path d="M${hx-.45*scale} ${hy-7*scale}h${.9*scale}" stroke="#25292b" stroke-width="1"/>`;
             out+=`<rect x="${hx-1.0*scale}" y="${hy-1.4*scale}" width="${2*scale}" height="${10*scale}" rx="${.8*scale}" fill="${url('metal')}" stroke="#555f62" stroke-width=".7"/><path d="M${hx} ${hy}v${6.3*scale}" stroke="#232a2c" stroke-width="${1.1*scale}" stroke-linecap="round"/><path d="M${hx-.16*scale} ${hy}v${6.3*scale}" stroke="${metallicHi}" stroke-width="${.55*scale}" stroke-linecap="round"/>`;
             if(document.getElementById('peephole').checked) out+=`<circle cx="${x+w/2}" cy="${H*.34}" r="${.65*scale}" fill="${url('metal')}" stroke="#464f50" stroke-width=".7"/><circle cx="${x+w/2}" cy="${H*.34}" r="${.29*scale}" fill="#172a35"/>`;
             if(document.getElementById('mail-slot').checked){const mx=x+w*.31,my=H*.72;out+=`<rect x="${mx}" y="${my}" width="${w*.38}" height="${2.4*scale}" rx="${.35*scale}" fill="${url('metal')}" stroke="#485052" stroke-width=".75"/><rect x="${mx+1.1*scale}" y="${my+.8*scale}" width="${w*.38-2.2*scale}" height="${.8*scale}" rx="1" fill="#394244"/>`;}
@@ -1011,6 +1037,7 @@
       }
     }
     function updatePreview() {
+      updateGridControls();
       updateDecorativeAvailability();
       updateSideliteControls();
       syncCatalogKind();
@@ -1032,6 +1059,8 @@
       for(const id of ['peephole','mail-slot','dog-door','wood-grain','impact'])if(document.getElementById(id).checked)tags.push(document.getElementById(id).dataset.label);
       document.getElementById('preview-summary').innerHTML=tags.map(t=>`<span>${escapeHTML(t)}</span>`).join('');
       const notes=[];
+      if(['gbg','sdl'].includes(selected('glass-style')?.id)){const g=currentGrid(),listed=listedGridPatterns[selected('glass-style').id]?.[selected('height')?.id==='h80'?'80':'68']?.[selected('door-style')?.value]||[];if(!g)notes.push('Select the door lite pattern.');else if(!listed.includes(g.count))notes.push(g.count+'-lite door grid is a custom request; confirm manufacturer availability before ordering.');if(selected('sidelite')?.id!=='no-sidelites')notes.push(currentGrid(true)?'Confirm the requested sidelite grid pattern with the manufacturer.':'Select the sidelite lite pattern.');}
+
       if(selected('sidelite')?.id!=='no-sidelites'&&selected('sidelite')&&!chosenSideliteStyle())notes.push('Select a catalog-compatible sidelite style, or choose no sidelites.');
       const door=selected('door');
       if(door&&!style)notes.push('Choose a catalog door style to set the panel and glass layout.');
@@ -1056,6 +1085,8 @@
       const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
       if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family],['Door surface',solidModel.surface]);
       if(door?.dataset.glass==='true')rows.splice(4,0,['Glazing construction','Lip-lite / framed glass insert — no flush glazing']);
+      if(['gbg','sdl'].includes(glass?.id)){rows.push(['Door lite pattern',gridPatternSummary()]);if(selected('sidelite')?.id!=='no-sidelites')rows.push(['Sidelite lite pattern',gridPatternSummary(true)]);}
+      rows.push(['Bore preparation',orderValue('bore')||'To be confirmed']);
       const fields=[["customer", "Customer / job name"], ["address", "Job address"], ["order-number", "Order / PO number"], ["prepared-by", "Prepared by"], ["manufacturer", "Manufacturer / product line"], ["material", "Door material"], ["unit-size", "Overall frame size (W \u00d7 H)"], ["rough-opening", "Rough opening (W \u00d7 H)"], ["actual-height", "Actual slab height / cut-down"], ["jamb", "Jamb depth"], ["exterior-color", "Exterior finish / color"], ["interior-color", "Interior finish / color"], ["sidelite-width", "Sidelite width(s)"], ["glass-size", "Glass insert size / model"], ["hardware", "Hardware / bore preparation"], ["approval", "Impact product approval / DP"]];
       fields.forEach(([id,label])=>rows.push([label,id==='exterior-color'?catalogFinishDetails('exterior'):id==='interior-color'?catalogFinishDetails('interior'):(orderValue(id)||'To be confirmed')]));
       rows.push(['Swing',orderValue('swing')||'To be confirmed'],['Hinge side (exterior view)',orderValue('hinge')||'To be confirmed']);
