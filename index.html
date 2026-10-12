@@ -238,6 +238,8 @@
     .style-surface {font-size:.72rem;padding:3px 7px;border-radius:5px;margin:5px 0;text-align:center}
     .style-surface.smooth {background:#e5edf4;color:#31506c}
     .style-surface.wood {background:#efe5d4;color:#71502a}
+    .edit-clear {margin:8px 0;padding:8px 12px;border:1px solid #bacdda;background:#f3f7fa;border-radius:7px;color:#164d75;cursor:pointer;font:inherit;font-size:.84rem}
+    #undo-design:disabled {opacity:.45;cursor:default}
   </style>
 </head>
 <body>
@@ -292,6 +294,7 @@
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="blinds" value="1475" data-single-price="1475" data-label="Blinds between glass" disabled><label for="blinds">Blinds Between Glass</label></div><span class="price dynamic-price">+$1,475</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="gbg" value="600" data-label="GBG grids" disabled><label for="gbg">Grids (GBG)</label></div><span class="price">+$600</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="sdl" value="1200" data-label="SDL grids" disabled><label for="sdl">SDL</label></div><span class="price">+$1,200</span></div>
+          <button type="button" class="edit-clear" id="clear-glass-choice">Clear Glass Choice</button>
           <div class="sidelite-settings" id="grid-pattern-controls" hidden>
             <p class="sub-option-title">Choose the Lite Pattern</p>
             <p class="sub-option-help">Choose the number of panes for GBG or SDL. Patterns marked custom require manufacturer confirmation.</p>
@@ -315,6 +318,7 @@
           <div class="option"><div class="option-copy"><input type="radio" name="finish" id="paint-2" value="619" data-single-price="619" data-label="Painted - 2 tone"><label for="paint-2">Painted - 2 Tone</label></div><span class="price dynamic-price">+$619</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="finish" id="stain-1" value="578" data-single-price="578" data-label="Stained - 1 tone"><label for="stain-1">Stained - 1 Tone</label></div><span class="price dynamic-price">+$578</span></div>
           <div class="option"><div class="option-copy"><input type="radio" name="finish" id="stain-2" value="784" data-single-price="784" data-label="Stained - 2 tone"><label for="stain-2">Stained - 2 Tone</label></div><span class="price dynamic-price">+$784</span></div>
+          <button type="button" class="edit-clear" id="clear-finish-choice">Clear Finish Choice</button>
           <div class="option"><div class="option-copy"><input type="checkbox" id="impact" value="0" data-label="Impact rated"><label for="impact">Impact Rated</label></div><span class="price">+40%</span></div>
         </div>
         <p class="note" id="glass-note">Choose a door containing glass to add decorative, obscure, rain, blinds, GBG, or SDL glass.</p>
@@ -341,7 +345,7 @@
       <div class="total-label">Calculated total</div>
       <div class="total" id="total">$0</div>
       <ul class="breakdown" id="breakdown"><li class="empty">Choose a base door to begin.</li></ul>
-      <button class="reset" type="button" id="reset">Clear Calculator</button>
+      <button class="copy-notes" type="button" id="undo-design" disabled>Undo Last Change</button><p class="copy-status" id="undo-status" role="status"></p><button class="reset" type="button" id="reset">Clear Calculator</button>
       <button class="copy-notes" type="button" id="copy-notes">Copy Quote Notes</button>
       <button class="copy-notes" type="button" id="print-specs">Print Door Specs / Save PDF</button>
       <p class="copy-status" id="copy-status" aria-live="polite"></p>
@@ -1161,7 +1165,7 @@
     }
     function drawHomePhoto(finished=false,target=photoCanvas){if(!homePhoto.image)return;const ctx=target.getContext('2d');ctx.clearRect(0,0,target.width,target.height);ctx.drawImage(homePhoto.image,0,0,target.width,target.height);if(homePhoto.door&&(finished||!homePhoto.before))warpHomeDoor(ctx,finished);if(!finished){const visible=!homePhoto.before;document.getElementById('photo-handles').hidden=!visible;const handles=[...document.querySelectorAll('.photo-handle')];handles.forEach((el,i)=>{el.style.left=(homePhoto.corners[i][0]/target.width*100)+'%';el.style.top=(homePhoto.corners[i][1]/target.height*100)+'%';});if(visible){ctx.save();ctx.beginPath();homePhoto.corners.forEach(([x,y],i)=>ctx[i?'lineTo':'moveTo'](x,y));ctx.closePath();ctx.strokeStyle='#00a4df';ctx.lineWidth=Math.max(2,target.width/600);ctx.setLineDash([target.width/80,target.width/120]);ctx.stroke();ctx.restore();}}}
     function refreshHomeDoor(){const version=++homePhoto.version;const ready=!!homePhoto.image&&!!selected('door-style')&&(selected('sidelite')?.id==='no-sidelites'||!!chosenSideliteStyle());['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=!ready);if(!homePhoto.image)return;homePhoto.door=null;if(!selected('door-style')){drawHomePhoto();photoMessage('Choose a door style above to show it on the photo.');return;}const svg=previewSVG('homePhotoDoor','exterior',true);const img=new Image();homePhoto.loading=new Promise(resolve=>{img.onload=()=>{try{if(version===homePhoto.version){homePhoto.door=img;const source=document.createElement('canvas');source.width=img.width;source.height=img.height;const sc=source.getContext('2d');sc.drawImage(img,0,0);homePhoto.doorPixels=sc.getImageData(0,0,source.width,source.height);drawHomePhoto();photoMessage('Drag the numbered corners to the outside of the door frame. Include selected sidelites in the opening. Your exterior design stays in sync.');}}catch(e){homePhoto.door=null;photoMessage('The door rendering could not be prepared. Try selecting the style again.');['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=true);}resolve();};img.onerror=()=>{if(version===homePhoto.version){photoMessage('The door preview could not be loaded. Try selecting the style again.');['photo-download','photo-print'].forEach(id=>document.getElementById(id).disabled=true);}resolve();};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
-    document.getElementById('home-photo-upload').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;const version=++homePhoto.uploadVersion;event.target.value='';if(file.size>25*1024*1024){photoMessage('Please choose a photo smaller than 25 MB.');return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){photoMessage('Please choose a JPG, PNG or WebP photo.');return;}const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();if(version!==homePhoto.uploadVersion)return;const factor=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));photoCanvas.width=Math.round(img.naturalWidth*factor);photoCanvas.height=Math.round(img.naturalHeight*factor);homePhoto.image=img;homePhoto.before=false;photoCanvas.hidden=false;document.getElementById('photo-empty').hidden=true;photoControls.forEach(id=>document.getElementById(id).disabled=false);document.getElementById('photo-before').textContent='Show Original';document.getElementById('photo-before').setAttribute('aria-pressed','false');resetPhotoPlacement();refreshHomeDoor();}catch(e){photoMessage('This photo could not be opened. Try a JPG or PNG image.');}finally{URL.revokeObjectURL(url);}});
+    document.getElementById('home-photo-upload').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;const previousDesign=lastDesignState;const version=++homePhoto.uploadVersion;event.target.value='';if(file.size>25*1024*1024){photoMessage('Please choose a photo smaller than 25 MB.');return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){photoMessage('Please choose a JPG, PNG or WebP photo.');return;}const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();if(version!==homePhoto.uploadVersion)return;const factor=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));photoCanvas.width=Math.round(img.naturalWidth*factor);photoCanvas.height=Math.round(img.naturalHeight*factor);homePhoto.image=img;homePhoto.before=false;photoCanvas.hidden=false;document.getElementById('photo-empty').hidden=true;photoControls.forEach(id=>document.getElementById(id).disabled=false);document.getElementById('photo-before').textContent='Show Original';document.getElementById('photo-before').setAttribute('aria-pressed','false');resetPhotoPlacement();refreshHomeDoor();}catch(e){photoMessage('This photo could not be opened. Try a JPG or PNG image.');}finally{URL.revokeObjectURL(url);if(version===homePhoto.uploadVersion)commitDesignChange(previousDesign);}});
     let photoDrag=null;
     function photoPoint(event){const r=photoCanvas.getBoundingClientRect();return [(event.clientX-r.left)*photoCanvas.width/r.width,(event.clientY-r.top)*photoCanvas.height/r.height];}
     function inPhotoOpening(p){const polygon=homePhoto.corners;return polygon.every((a,i)=>{const b=polygon[(i+1)%4];return (b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0])>=0;});}
@@ -1178,12 +1182,61 @@
     document.getElementById('photo-print').addEventListener('click',async()=>{try{const canvas=await finishedHomePhoto();const image=document.createElement('img');image.src=canvas.toDataURL('image/png');image.alt='Configured exterior door on the home photo';const sheet=document.getElementById('photo-print-sheet');sheet.innerHTML=`<h1>Koehler Home Improvement · Your New Entrance</h1><p>${escapeHTML(selected('door-style').dataset.label||selected('door-style').value)} · ${escapeHTML(catalogFinishDetails('exterior'))}</p>`;sheet.append(image);const note=document.createElement('p');note.textContent='Design concept. Verify final measurements, colors, product availability and installation details before ordering.';sheet.append(note);await image.decode();document.body.classList.add('photo-print');window.print();}catch(e){photoMessage(e.message);}});
     window.addEventListener('afterprint',()=>document.body.classList.remove('photo-print'));
 
+
+    // Keep up to 30 reversible design changes. Photo images are retained in memory, not uploaded.
+    const designUndo=[];
+    let undoRestoring=false,lastDesignState=null,undoInputGroup='',undoInputOpen=false;
+    function captureDesignState(){return {
+      controls:[...document.querySelectorAll('input[id],select[id],textarea[id]')].filter(x=>x.type!=='file').map(x=>({id:x.id,name:x.name,type:x.type,value:x.value,checked:x.checked})),
+      finishes:JSON.parse(JSON.stringify(finishSelections)),pickerKind:finishPickerKind,pickerTarget:finishPickerTarget,
+      photo:homePhoto.image,corners:homePhoto.corners.map(p=>[...p]),photoWidth:photoCanvas.width,photoHeight:photoCanvas.height,before:homePhoto.before
+    };}
+    function designFingerprint(state){return JSON.stringify({controls:state.controls,finishes:Object.fromEntries(Object.entries(state.finishes).map(([kind,sides])=>[kind,Object.fromEntries(Object.entries(sides).map(([side,c])=>[side,c?{code:c.code,group:c.group,hex:c.hex}:null]))])),photo:state.photo?.src||'',corners:state.corners,before:state.before});}
+    function syncUndoButton(){document.getElementById('undo-design').disabled=!designUndo.length;}
+    function keepUndoState(previous){if(!previous)return;designUndo.push(previous);if(designUndo.length>30)designUndo.shift();syncUndoButton();}
+    function commitDesignChange(previous,coalesce=false){if(undoRestoring)return;const next=captureDesignState();if(previous&&designFingerprint(previous)!==designFingerprint(next)){if(!coalesce)keepUndoState(previous);document.getElementById('undo-status').textContent='You can change selections at any time. Undo restores the previous design.';}lastDesignState=next;}
+    function restoreDesignState(state){
+      undoRestoring=true;homePhoto.uploadVersion++;homePhoto.version++;
+      const dynamicNames=new Set(['door-style','decorative-design','sidelite-style']);
+      const apply=x=>{const el=document.getElementById(x.id);if(!el)return;if(el.type==='checkbox'||el.type==='radio')el.checked=x.checked;else el.value=x.value;};
+      state.controls.filter(x=>!dynamicNames.has(x.name)&&!['order-door-grid','order-sidelite-grid'].includes(x.id)).forEach(apply);
+      for(const kind of ['paint','stain'])for(const side of ['exterior','interior'])finishSelections[kind][side]=state.finishes[kind][side];
+      finishPickerKind=state.pickerKind;finishPickerTarget=state.pickerTarget;lastFinishKind=null;finishResultsKey='';
+      styleGridKey='';sideliteGridKey='';gridChoiceKey='';
+      updateGlassProtection();updateDoorStyles();
+      for(const name of ['door-style','decorative-design']){document.querySelectorAll(`[name="${name}"]`).forEach(el=>el.checked=false);state.controls.filter(x=>x.name===name).forEach(apply);if(name==='door-style')updateDecorativeAvailability();}
+      updateDecorativeAvailability();updateSideliteControls();
+      document.querySelectorAll('[name="sidelite-style"]').forEach(el=>el.checked=false);state.controls.filter(x=>x.name==='sidelite-style').forEach(apply);
+      updateGridControls();state.controls.filter(x=>['order-door-grid','order-sidelite-grid'].includes(x.id)).forEach(apply);
+      decorativeClearedMessage='';sideliteClearedMessage='';
+      homePhoto.image=state.photo;homePhoto.corners=state.corners.map(p=>[...p]);homePhoto.before=state.before;photoCanvas.width=state.photoWidth;photoCanvas.height=state.photoHeight;
+      photoCanvas.hidden=!state.photo;document.getElementById('photo-empty').hidden=!!state.photo;document.getElementById('photo-handles').hidden=!state.photo||state.before;
+      photoControls.forEach(id=>document.getElementById(id).disabled=!state.photo);
+      document.getElementById('photo-before').textContent=state.before?'Show New Door':'Show Original';document.getElementById('photo-before').setAttribute('aria-pressed',String(state.before));
+      calculate();undoRestoring=false;undoInputGroup='';undoInputOpen=false;lastDesignState=captureDesignState();syncUndoButton();
+    }
+    document.getElementById('undo-design').addEventListener('click',()=>{const state=designUndo.pop();if(!state)return;restoreDesignState(state);document.getElementById('undo-status').textContent='Previous design restored.';});
+    document.getElementById('clear-glass-choice').addEventListener('click',()=>{document.querySelectorAll('[name="glass-style"],[name="decorative-design"]').forEach(el=>el.checked=false);document.getElementById('order-door-grid').value='';document.getElementById('order-sidelite-grid').value='';calculate();});
+    document.getElementById('clear-finish-choice').addEventListener('click',()=>{document.querySelectorAll('[name="finish"]').forEach(el=>el.checked=false);calculate();});
+    function watchDesignEvent(event){if(undoRestoring)return;const el=event.target;if(!el.matches('input,select,textarea')||el.type==='file'||['finish-search','finish-family','finish-product','finish-target'].includes(el.id))return;
+      const previous=lastDesignState,group=el.id||el.name;
+      const coalesce=undoInputOpen&&undoInputGroup===group;
+      undoInputGroup=group;undoInputOpen=event.type==='input';
+      queueMicrotask(()=>commitDesignChange(previous,coalesce));
+    }
+    document.addEventListener('input',watchDesignEvent,true);document.addEventListener('change',watchDesignEvent,true);
+    document.addEventListener('click',event=>{if(undoRestoring)return;const button=event.target.closest('button');if(!button||!button.matches('.swatch,.finish-color-card,#finish-kind-paint,#finish-kind-stain,#reset,#clear-glass-choice,#clear-finish-choice,#photo-fit-reset,#photo-remove,#photo-before'))return;const previous=lastDesignState;undoInputOpen=false;queueMicrotask(()=>commitDesignChange(previous));},true);
+    photoStage.addEventListener('pointerdown',()=>{if(undoRestoring||!homePhoto.image)return;photoStage._undoStart=captureDesignState();},true);
+    photoStage.addEventListener('pointerup',()=>{const state=photoStage._undoStart;photoStage._undoStart=null;commitDesignChange(state);});
+    document.getElementById('photo-handles').addEventListener('keydown',event=>{if(!event.key.startsWith('Arrow'))return;const previous=lastDesignState;queueMicrotask(()=>commitDesignChange(previous));},true);
+
     initFinishPicker();
     renderGlassDesigns();
     form.addEventListener('change', event=>{if(event.target.matches('input[type="radio"],input[type="checkbox"]'))calculate();});
     document.getElementById('reset').addEventListener('click', () => { form.reset(); for(const kind of ['paint','stain'])for(const side of ['exterior','interior'])finishSelections[kind][side]=null; lastFinishKind=null; finishPickerKind=''; finishPickerTarget='exterior'; finishVisibleCount=36; document.getElementById('finish-search').value=''; document.getElementById('finish-feedback').textContent=''; document.getElementById('preview-view').value='exterior'; document.getElementById('preview-metal').value='nickel'; document.getElementById('preview-blinds').value='20'; document.getElementById('copy-status').textContent = ''; calculate(); });
     document.getElementById('copy-notes').addEventListener('click', copyQuoteNotes);
     calculate();
+    lastDesignState=captureDesignState();
   </script>
 </body>
 </html>
