@@ -238,6 +238,8 @@
     .style-surface {font-size:.72rem;padding:3px 7px;border-radius:5px;margin:5px 0;text-align:center}
     .style-surface.smooth {background:#e5edf4;color:#31506c}
     .style-surface.wood {background:#efe5d4;color:#71502a}
+    #sidelite-grid-control[hidden] {display:none}
+    #sidelite-grid-control {margin:16px 0}
     .edit-clear {margin:8px 0;padding:8px 12px;border:1px solid #bacdda;background:#f3f7fa;border-radius:7px;color:#164d75;cursor:pointer;font:inherit;font-size:.84rem}
     #undo-design:disabled {opacity:.45;cursor:default}
   </style>
@@ -298,7 +300,7 @@
           <div class="sidelite-settings" id="grid-pattern-controls" hidden>
             <p class="sub-option-title">Choose the Lite Pattern</p>
             <p class="sub-option-help">Choose the number of panes for GBG or SDL. Patterns marked custom require manufacturer confirmation.</p>
-            <div class="order-grid"><label>Door grid pattern<select id="order-door-grid"><option value="">Choose a pattern</option></select></label><label id="sidelite-grid-control">Sidelite grid pattern<select id="order-sidelite-grid"><option value="">Choose a pattern</option></select></label></div>
+            <div class="order-grid"><label>Door grid pattern<select id="order-door-grid"><option value="">Choose a pattern</option></select></label></div>
             <div id="grid-pattern-picture" style="max-width:130px;margin:12px auto"></div>
           </div>
           <div class="option"><div class="option-copy"><input type="radio" name="sidelite" id="no-sidelites" value="0" data-label="No sidelites" checked><label for="no-sidelites">No Sidelites</label></div><span class="price">Included</span></div>
@@ -308,6 +310,7 @@
             <p class="sub-option-title">Sidelite design</p>
             <p class="sub-option-help" id="sidelite-alignment-note">Choose a sidelite style from the configurations listed for your selected door and glass.</p>
             <div class="size-grid sidelite-design-grid" id="sidelite-design-choices"></div>
+            <div id="sidelite-grid-control" class="order-grid" hidden><label>Sidelite grid pattern<select id="order-sidelite-grid"><option value="">Choose a pattern</option></select></label><p class="sub-option-help">Choose the sidelite pane count independently of the door. Custom patterns and SDL sidelite construction require manufacturer confirmation.</p></div>
             <label class="sidelite-side-control" id="sidelite-side-control">Single sidelite position — viewed from outside<select id="order-side"><option value="Left">Left of the door</option><option value="Right">Right of the door</option></select></label>
           </div>
           <div class="option"><div class="option-copy"><input type="checkbox" id="peephole" value="250" data-label="Peephole"><label for="peephole">Peephole</label></div><span class="price">+$250</span></div>
@@ -560,7 +563,7 @@
     function compatibleSidelites() {
       const height=selected('height')?.id==='h80'?'80':'68',packageName=sidelitePackage();
       if(!packageName)return [];
-      const matrix=sideliteCompatibility[packageName]?.[height]||{},style=selected('door-style')?.value;
+      const matrix=sideliteCompatibility[packageName==='sdl'?'clear':packageName]?.[height]||{},style=selected('door-style')?.value;
       const solid=solidCatalog.find(x=>x.code===style);
       const doorFamilies=solid?[solid.prefix]:matrix[style]||[];
       if(!doorFamilies.length)return [];
@@ -587,7 +590,7 @@
       document.getElementById('sidelite-design-choices').hidden=false;
       const note=document.getElementById('sidelite-alignment-note');
       const message=!selected('door-style')?'Choose a door style to see its sidelite choices.':!sidelitePackage()?'Choose the decorative or textured glass pattern first.':options.length?'Choose an independent sidelite design listed for this door and glass package. The chosen design applies to both sidelites when two are selected.':'No matching fiberglass sidelite is listed for this door and glass package. Select another door or glass package, or choose no sidelites.';
-      note.textContent=[sideliteClearedMessage,message,'Confirm final product family, glass size and impact approval before ordering.'].filter(Boolean).join(' ');
+      note.textContent=[sideliteClearedMessage,message,sidelitePackage()==='sdl'?'SDL sidelite sizes use the clear-glass catalog; the external-grid construction is a custom request and must be confirmed.':'','Confirm final product family, glass size and impact approval before ordering.'].filter(Boolean).join(' ');
     }
     function sideliteDescription() {
       const type=selected('sidelite')?.id;
@@ -605,7 +608,7 @@
     function updateGridControls(){
       const kind=selected('glass-style')?.id,active=['gbg','sdl'].includes(kind),height=selected('height')?.id==='h80'?'80':'68',style=selected('door-style')?.value;
       document.getElementById('grid-pattern-controls').hidden=!active;
-      document.getElementById('sidelite-grid-control').hidden=selected('sidelite')?.id==='no-sidelites';
+      document.getElementById('sidelite-grid-control').hidden=!active||selected('sidelite')?.id==='no-sidelites';
       const listed=listedGridPatterns[kind]?.[height]?.[style]||[],key=kind+'|'+height+'|'+style;
       if(key!==gridChoiceKey){gridChoiceKey=key;const select=document.getElementById('order-door-grid'),previous=select.value;const patterns=doorGridPatterns.concat(listed.includes(3)?[{count:3,cols:3,rows:1}]:[],listed.includes(5)?[{count:5,cols:5,rows:1}]:[]).sort((a,b)=>a.count-b.count);
         select.innerHTML='<option value="">Choose a pattern</option>'+patterns.map(x=>`<option value="${x.count}">${x.count}-Lite · ${x.cols} across × ${x.rows} high${listed.includes(x.count)?' · Catalog-listed':' · Custom / confirm availability'}</option>`).join('');if(patterns.some(x=>String(x.count)===previous))select.value=previous;
@@ -1063,6 +1066,7 @@
       for(const id of ['peephole','mail-slot','dog-door','wood-grain','impact'])if(document.getElementById(id).checked)tags.push(document.getElementById(id).dataset.label);
       document.getElementById('preview-summary').innerHTML=tags.map(t=>`<span>${escapeHTML(t)}</span>`).join('');
       const notes=[];
+      if(selected('glass-style')?.id==='sdl'&&selected('sidelite')?.id!=='no-sidelites')notes.push('SDL sidelites are a custom construction request; confirm manufacturer availability and pricing before ordering.');
       if(['gbg','sdl'].includes(selected('glass-style')?.id)){const g=currentGrid(),listed=listedGridPatterns[selected('glass-style').id]?.[selected('height')?.id==='h80'?'80':'68']?.[selected('door-style')?.value]||[];if(!g)notes.push('Select the door lite pattern.');else if(!listed.includes(g.count))notes.push(g.count+'-lite door grid is a custom request; confirm manufacturer availability before ordering.');if(selected('sidelite')?.id!=='no-sidelites')notes.push(currentGrid(true)?'Confirm the requested sidelite grid pattern with the manufacturer.':'Select the sidelite lite pattern.');}
 
       if(selected('sidelite')?.id!=='no-sidelites'&&selected('sidelite')&&!chosenSideliteStyle())notes.push('Select a catalog-compatible sidelite style, or choose no sidelites.');
@@ -1089,7 +1093,7 @@
       const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
       if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family],['Door surface',solidModel.surface]);
       if(door?.dataset.glass==='true')rows.splice(4,0,['Glazing construction','Lip-lite / framed glass insert — no flush glazing']);
-      if(['gbg','sdl'].includes(glass?.id)){rows.push(['Door lite pattern',gridPatternSummary()]);if(selected('sidelite')?.id!=='no-sidelites')rows.push(['Sidelite lite pattern',gridPatternSummary(true)]);}
+      if(['gbg','sdl'].includes(glass?.id)){rows.push(['Door lite pattern',gridPatternSummary()]);if(selected('sidelite')?.id!=='no-sidelites'){rows.push(['Sidelite lite pattern',gridPatternSummary(true)]);if(glass.id==='sdl')rows.push(['Sidelite grid construction','Custom SDL — confirm availability and pricing']);}}
       rows.push(['Bore preparation',orderValue('bore')||'To be confirmed']);
       const fields=[["customer", "Customer / job name"], ["address", "Job address"], ["order-number", "Order / PO number"], ["prepared-by", "Prepared by"], ["manufacturer", "Manufacturer / product line"], ["material", "Door material"], ["unit-size", "Overall frame size (W \u00d7 H)"], ["rough-opening", "Rough opening (W \u00d7 H)"], ["actual-height", "Actual slab height / cut-down"], ["jamb", "Jamb depth"], ["exterior-color", "Exterior finish / color"], ["interior-color", "Interior finish / color"], ["sidelite-width", "Sidelite width(s)"], ["glass-size", "Glass insert size / model"], ["hardware", "Hardware / bore preparation"], ["approval", "Impact product approval / DP"]];
       fields.forEach(([id,label])=>rows.push([label,id==='exterior-color'?catalogFinishDetails('exterior'):id==='interior-color'?catalogFinishDetails('interior'):(orderValue(id)||'To be confirmed')]));
