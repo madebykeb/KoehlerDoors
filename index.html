@@ -235,6 +235,9 @@
     .glass-choice[hidden],.glass-group-title[hidden] {display:none!important}
     #decorative-selection-status {color:#8a5113}
     #decorative-selection-status:empty {display:none}
+    .style-surface {font-size:.72rem;padding:3px 7px;border-radius:5px;margin:5px 0;text-align:center}
+    .style-surface.smooth {background:#e5edf4;color:#31506c}
+    .style-surface.wood {background:#efe5d4;color:#71502a}
   </style>
 </head>
 <body>
@@ -382,10 +385,10 @@
       ['SGS','Storm Guard Smooth',['flush','six','square','plank','blank'],['flush','six','square','plank']],
       ['SGM','Storm Guard Mahogany',['six','plank'],['six']],
       ['HGS','Heritage Smooth',['craftsman'],['craftsman']],
-      ['HFT','Heritage Fir',['craftsman'],['craftsman']],
-      ['MHD','Masonite HD Steel',['flush','six','square','roman','blank','hollister','craftsman'],['flush','six','square']]
+      ['HFT','Heritage Fir',['craftsman'],['craftsman']]
     ];
-    families.forEach(([prefix,family,a,b])=>[['68',a],['80',b]].forEach(([height,keys])=>keys.forEach(key=>solidCatalog.push({code:prefix+' / '+solidNames[key],height,key,family,prefix}))));
+    const solidSurfaces={BLS:'Smooth',SGS:'Smooth',HGS:'Smooth',BMT:'Wood grain · Mahogany',SGM:'Wood grain · Mahogany',BLT:'Wood grain · Oak',HFT:'Wood grain · Fir'};
+    families.forEach(([prefix,family,a,b])=>[['68',a],['80',b]].forEach(([height,keys])=>keys.forEach(key=>solidCatalog.push({code:prefix+' / '+solidNames[key],height,key,family,prefix,surface:solidSurfaces[prefix]}))));
     function styleDrawing(layout,code) {
       const panelPath=(x,y,w,h,arch)=>arch?`M${x} ${y+8} Q${x+w/2} ${y-5} ${x+w} ${y+8} V${y+h} H${x}Z`:`M${x} ${y}H${x+w}V${y+h}H${x}Z`;
       let parts='';
@@ -520,7 +523,7 @@
       styleGridKey=key;
       document.getElementById('style-grid').innerHTML=styles.map(x=>{
         const id='style-'+x.code.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+x.height;
-        return `<div class="style-choice"><input type="radio" name="door-style" id="${id}" value="${escapeHTML(x.code)}" data-code="${escapeHTML(x.code)}" data-label="${escapeHTML(x.code+' — '+x.family)}" ${current===x.code?'checked':''}><label for="${id}"><span class="style-art">${styleDrawing(x.key?solidLayouts[x.key]:modelLayouts[x.code],x.code)}</span><span class="style-family">${x.family}</span><strong>${x.key?solidNames[x.key]:x.code}</strong><span class="style-code">${x.prefix||x.code} · ${wanted==='80'?'8′0″':'6′8″'} · ${lite?'Glass':'Solid'}</span></label></div>`;
+        return `<div class="style-choice"><input type="radio" name="door-style" id="${id}" value="${escapeHTML(x.code)}" data-code="${escapeHTML(x.code)}" data-label="${escapeHTML(x.code+' — '+x.family+(x.surface?' — '+x.surface:''))}" ${current===x.code?'checked':''}><label for="${id}"><span class="style-art">${styleDrawing(x.key?solidLayouts[x.key]:modelLayouts[x.code],x.code)}</span><span class="style-family">${x.family}</span>${x.surface?`<span class="style-surface ${x.surface==='Smooth'?'smooth':'wood'}">${x.surface}</span>`:''}<strong>${x.key?solidNames[x.key]:x.code}</strong><span class="style-code">${x.prefix||x.code} · ${wanted==='80'?'8′0″':'6′8″'} · ${lite?'Glass':'Solid'}</span></label></div>`;
       }).join('');
     }
 
@@ -710,7 +713,7 @@
       const stain=selected('finish')?.id.startsWith('stain');
       const chosenStain=stain?catalogColor(interior?'interior':'exterior'):null;
       const solidStain=chosenStain?.group && /solid color|deck & dock/i.test(chosenStain.group);
-      const grain=(stain&&!solidStain)||document.getElementById('wood-grain').checked;
+      const grain=solidStyle?.surface?.startsWith('Wood grain')||(stain&&!solidStain)||document.getElementById('wood-grain').checked;
       const color=interior&&twoTone?orderValue('interior-preview-color'):orderValue('color');
       const dark=shade(color,-.27),light=shade(color,.18),base=shade(color,-.07);
       const swing=orderValue('swing');
@@ -981,6 +984,8 @@
       const tags=[];
       const style=selected('door-style')?.value;
       if(style)tags.push(style);
+      const solidSurface=solidCatalog.find(x=>x.code===style)?.surface;
+      if(solidSurface)tags.push(solidSurface);
       if(selected('sidelite'))tags.push(sideliteDescription());
       const glass=selected('glass-style');
       if(glass)tags.push(glass.dataset.label+(glass.id==='decorative'&&selected('decorative-design')?' · '+selected('decorative-design').value:''));
@@ -1009,7 +1014,7 @@
       const door=selected('door'), glass=selected('glass-style');
       const solidModel=solidCatalog.find(x=>x.code===selected('door-style')?.value);
       const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
-      if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family]);
+      if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family],['Door surface',solidModel.surface]);
       if(door?.dataset.glass==='true')rows.splice(4,0,['Glazing construction','Lip-lite / framed glass insert — no flush glazing']);
       const fields=[["customer", "Customer / job name"], ["address", "Job address"], ["order-number", "Order / PO number"], ["prepared-by", "Prepared by"], ["manufacturer", "Manufacturer / product line"], ["material", "Door material"], ["unit-size", "Overall frame size (W \u00d7 H)"], ["rough-opening", "Rough opening (W \u00d7 H)"], ["actual-height", "Actual slab height / cut-down"], ["jamb", "Jamb depth"], ["exterior-color", "Exterior finish / color"], ["interior-color", "Interior finish / color"], ["sidelite-width", "Sidelite width(s)"], ["glass-size", "Glass insert size / model"], ["hardware", "Hardware / bore preparation"], ["approval", "Impact product approval / DP"]];
       fields.forEach(([id,label])=>rows.push([label,id==='exterior-color'?catalogFinishDetails('exterior'):id==='interior-color'?catalogFinishDetails('interior'):(orderValue(id)||'To be confirmed')]));
