@@ -124,7 +124,7 @@
       .print-head img {width:135px;max-height:55px;object-fit:contain}
       #order-sheet h1 {font-size:21px;color:#003871}
       .print-layout {display:grid;grid-template-columns:220px 1fr;gap:20px}
-      .print-layout > div > svg {width:210px;height:290px}
+      .print-layout > div > svg, .print-layout > div > .print-door-picture {width:210px;height:auto}
       .print-table {width:100%;border-collapse:collapse;line-height:1.25}
       .print-table th,.print-table td {padding:2px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top;overflow-wrap:anywhere}
       .print-table th {width:36%}
@@ -167,7 +167,7 @@
     .catalog-reference {margin:0}
     @media(max-width:900px) { main {grid-template-columns:minmax(0,1fr) minmax(340px,.9fr);padding:20px 16px;gap:16px}.result {padding:16px} }
     @media(max-width:760px) { main {grid-template-columns:1fr}.result {max-height:none;overflow:visible;position:static} }
-    @media print { .print-layout {grid-template-columns:255px 1fr;gap:16px}.print-layout > div > svg {width:255px;height:auto}.print-layout p {font-size:9px;color:#555}.print-head h1 {font-size:19px} }
+    @media print { .print-layout {grid-template-columns:255px 1fr;gap:16px}.print-layout > div > svg, .print-layout > div > .print-door-picture {width:255px;height:auto}.print-layout p {font-size:9px;color:#555}.print-head h1 {font-size:19px} }
 
     .finish-toggle-row {display:flex;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap}
     .finish-toggle {display:flex;gap:3px;background:#eaf1f5;padding:4px;border-radius:9px}
@@ -309,7 +309,7 @@
           </div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="obscure" value="1000" data-label="Obscure glass" disabled><label for="obscure">Obscure Glass<small class="option-privacy">Privacy: confirm insert rating</small></label></div><span class="price">+$1,000</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="rain" value="1200" data-label="Rain glass" disabled><label for="rain">Rain Glass<small class="option-privacy">Privacy: confirm insert rating</small></label></div><span class="price">+$1,200</span></div>
-          <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="blinds" value="1475" data-single-price="1475" data-label="Blinds between glass" disabled><label for="blinds">Blinds Between Glass<small class="option-privacy">Privacy varies with blind position; clear glass 1/10</small></label></div><span class="price dynamic-price">+$1,475</span></div>
+          <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="blinds" value="875" data-single-price="875" data-label="Blinds between glass" disabled><label for="blinds">Blinds Between Glass<small class="option-privacy">Privacy varies with blind position; clear glass 1/10</small></label></div><span class="price dynamic-price">+$875</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="gbg" value="600" data-label="GBG grids" disabled><label for="gbg">Grids (GBG)<small class="option-privacy">Privacy 1/10 — clear glass</small></label></div><span class="price">+$600</span></div>
           <div class="option glass-option disabled"><div class="option-copy"><input type="radio" name="glass-style" id="sdl" value="1200" data-label="SDL grids" disabled><label for="sdl">SDL<small class="option-privacy">Privacy 1/10 — clear glass</small></label></div><span class="price">+$1,200</span></div>
           <button type="button" class="edit-clear" id="clear-glass-choice">Clear Glass Choice</button>
@@ -1116,6 +1116,7 @@
       syncFinishColors();
       renderFinishPicker();
       document.getElementById('door-preview').innerHTML=previewSVG();
+      schedulePrintArtwork();
       if(document.getElementById('studio-detail-modal').open)document.getElementById('studio-detail-preview').innerHTML=previewSVG('detailScene');
       applyStudioZoom();
       refreshHomeDoor();
@@ -1172,17 +1173,94 @@
       rows.push(['Hardware finish (preview)',document.getElementById('preview-metal').selectedOptions[0].textContent]);
       return rows;
     }
+    // Prepare a single PNG for printing: iPad print/PDF must not have to resolve nested SVG photos.
+    const printArtworkBySide=new Map(), printPhotoPNGs=new Map();
+    let printArtworkTimer, orderSheetKey='', printInProgress=false;
+    function loadPrintImage(src) {
+      return new Promise((resolve,reject)=>{
+        const image=new Image();
+        const timer=setTimeout(()=>{image.onload=image.onerror=null;reject(Error('The door picture took too long to load. Please try printing again.'));},20000);
+        image.onload=()=>{clearTimeout(timer);resolve(image);};
+        image.onerror=()=>{clearTimeout(timer);reject(Error('The door picture could not be prepared. Please try printing again.'));};
+        image.src=src;
+      });
+    }
+    function printPhotoPNG(source) {
+      if(!printPhotoPNGs.has(source)) {
+        const pending=loadPrintImage(source).then(image=>{
+          const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;
+          canvas.getContext('2d').drawImage(image,0,0);return canvas.toDataURL('image/png');
+        }).catch(error=>{printPhotoPNGs.delete(source);throw error;});
+        printPhotoPNGs.set(source,pending);
+        if(printPhotoPNGs.size>24)printPhotoPNGs.delete(printPhotoPNGs.keys().next().value);
+      }
+      return printPhotoPNGs.get(source);
+    }
+    function printSceneSVG(side) {return previewSVG(side==='exterior'?'orderScene':'interiorOrderScene',side);}
+    function getPrintArtwork(side) {
+      const svg=printSceneSVG(side),existing=printArtworkBySide.get(side);
+      if(existing?.svg===svg)return existing.promise;
+      const record={svg,src:null,promise:null};printArtworkBySide.set(side,record);
+      record.promise=(async()=>{
+        const doc=new DOMParser().parseFromString(svg,'image/svg+xml'),root=doc.documentElement;
+        if(doc.querySelector('parsererror'))throw Error('The door picture could not be prepared.');
+        const xlink='http://www.w3.org/1999/xlink';
+        // Convert embedded WebP/JPEG sources to PNG before Safari renders the complete scene.
+        await Promise.all([...root.querySelectorAll('image')].map(async node=>{
+          const source=node.getAttribute('href')||node.getAttributeNS(xlink,'href');
+          if(!source)return;
+          const png=await printPhotoPNG(source);node.setAttribute('href',png);node.setAttributeNS(xlink,'xlink:href',png);
+        }));
+        root.setAttribute('width','1400');root.setAttribute('height','1180');
+        const source='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(root));
+        const image=await loadPrintImage(source);
+        const canvas=document.createElement('canvas');canvas.width=1400;canvas.height=1180;
+        const context=canvas.getContext('2d');context.fillStyle='#fff';context.fillRect(0,0,1400,1180);context.drawImage(image,0,0,1400,1180);
+        record.src=canvas.toDataURL('image/png');return record;
+      })().catch(error=>{if(printArtworkBySide.get(side)===record)printArtworkBySide.delete(side);throw error;});
+      return record.promise;
+    }
+    function orderPrintPicture(side) {
+      const record=printArtworkBySide.get(side);
+      if(record?.src&&record.svg===printSceneSVG(side))return `<img class="print-door-picture" src="${record.src}" width="1400" height="1180" loading="eager" alt="${side==='exterior'?'Exterior':'Interior'} door design with the selected glass"/>`;
+      return printSceneSVG(side);
+    }
+    async function ensurePrintArtwork() {
+      if(!selected('door'))return;
+      const sides=['exterior',...(/-2$/.test(selected('finish')?.id||'')?['interior']:[])];
+      await Promise.all(sides.map(getPrintArtwork));
+    }
+    function schedulePrintArtwork() {
+      clearTimeout(printArtworkTimer);
+      if(!selected('door')){printArtworkBySide.clear();orderSheetKey='';return;}
+      printArtworkTimer=setTimeout(()=>{ensurePrintArtwork().then(()=>{if(!printInProgress&&!document.body.classList.contains('photo-print'))prepareOrderSheet();}).catch(()=>{});},150);
+    }
     function prepareOrderSheet() {
       document.body.classList.remove('photo-print');
       if(!selected('door')) return false;
       const logo=document.querySelector('.brand-logo').src;
-      document.getElementById('order-sheet').innerHTML=`<div class="print-head"><img src="${escapeHTML(logo)}" alt="Koehler Home Improvement"><div><h1>Door Ordering Specifications</h1><div>Prepared ${escapeHTML(new Date().toLocaleDateString('en-US'))}</div></div></div><div class="print-layout"><div>${previewSVG('orderScene','exterior')}<p>Exterior design visualization. Verify final dimensions, glass proportions, accessory placement and availability before ordering.</p>${/-2$/.test(selected('finish')?.id||'') ? previewSVG('interiorOrderScene','interior')+'<p>Interior finish view</p>' : ''}<div class="print-reference">${catalogReference()}</div></div><table class="print-table"><tbody>${orderRows().map(([key,value])=>`<tr><th>${escapeHTML(key)}</th><td>${escapeHTML(value)}</td></tr>`).join('')}</tbody></table></div>${document.getElementById('preview-validation').textContent ? `<p class="print-note"><strong>Configuration review:</strong> ${escapeHTML(document.getElementById('preview-validation').textContent)}</p>` : ''}<div class="print-note"><strong>Special instructions</strong>\n${escapeHTML(orderValue('notes')||'None entered.')}\nHardware (lockset) is not included. Koehler will install the homeowner’s pre-purchased lockset on the day of installation.</div><p>Items marked “To be confirmed” are unfinished ordering details. Confirm measurements, handing, glass compatibility and product approvals before submitting to the manufacturer.</p><div class="print-sign">Verified by: ________________________ &nbsp; Date: _______________</div>`;
+      const signature=JSON.stringify([printSceneSVG('exterior'),/-2$/.test(selected('finish')?.id||'')?printSceneSVG('interior'):'',orderRows(),orderValue('notes'),document.getElementById('preview-validation').textContent]);
+      const ready=['exterior',...(/-2$/.test(selected('finish')?.id||'')?['interior']:[])].every(side=>{const record=printArtworkBySide.get(side);return record?.src&&record.svg===printSceneSVG(side);});
+      if(orderSheetKey===signature&&ready&&document.querySelector('#order-sheet .print-door-picture'))return true;
+      orderSheetKey=ready?signature:'';
+      document.getElementById('order-sheet').innerHTML=`<div class="print-head"><img src="${escapeHTML(logo)}" alt="Koehler Home Improvement"><div><h1>Door Ordering Specifications</h1><div>Prepared ${escapeHTML(new Date().toLocaleDateString('en-US'))}</div></div></div><div class="print-layout"><div>${orderPrintPicture('exterior')}<p>Exterior design visualization. Verify final dimensions, glass proportions, accessory placement and availability before ordering.</p>${/-2$/.test(selected('finish')?.id||'') ? orderPrintPicture('interior')+'<p>Interior finish view</p>' : ''}<div class="print-reference">${catalogReference()}</div></div><table class="print-table"><tbody>${orderRows().map(([key,value])=>`<tr><th>${escapeHTML(key)}</th><td>${escapeHTML(value)}</td></tr>`).join('')}</tbody></table></div>${document.getElementById('preview-validation').textContent ? `<p class="print-note"><strong>Configuration review:</strong> ${escapeHTML(document.getElementById('preview-validation').textContent)}</p>` : ''}<div class="print-note"><strong>Special instructions</strong>\n${escapeHTML(orderValue('notes')||'None entered.')}\nHardware (lockset) is not included. Koehler will install the homeowner’s pre-purchased lockset on the day of installation.</div><p>Items marked “To be confirmed” are unfinished ordering details. Confirm measurements, handing, glass compatibility and product approvals before submitting to the manufacturer.</p><div class="print-sign">Verified by: ________________________ &nbsp; Date: _______________</div>`;
       return true;
     }
     document.getElementById('print-specs').addEventListener('click', async()=>{
-      if(!prepareOrderSheet()){document.getElementById('copy-status').textContent='Choose a base door first.';return;}
-      await Promise.all([...document.querySelectorAll('#order-sheet img')].map(img=>img.decode().catch(()=>{})));
-      window.print();
+      if(printInProgress)return;
+      if(!selected('door')){document.getElementById('copy-status').textContent='Choose a base door first.';return;}
+      const button=document.getElementById('print-specs'),label=button.textContent;
+      printInProgress=true;button.disabled=true;button.textContent='Preparing door picture…';
+      try {
+        // If a choice changes while the picture loads, finish the newest configuration before printing.
+        do {await ensurePrintArtwork();}while(['exterior',...(/-2$/.test(selected('finish')?.id||'')?['interior']:[])].some(side=>printArtworkBySide.get(side)?.svg!==printSceneSVG(side)));
+        prepareOrderSheet();
+        await Promise.all([...document.querySelectorAll('#order-sheet img')].map(image=>loadPrintImage(image.src)));
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+        document.getElementById('copy-status').textContent='';
+        window.print();
+      }catch(error){document.getElementById('copy-status').textContent=error.message;}
+      finally{printInProgress=false;button.disabled=false;button.textContent=label;}
     });
     window.addEventListener('beforeprint',()=>{if(!document.body.classList.contains('photo-print'))prepareOrderSheet();});
     form.addEventListener('input',event=>{
