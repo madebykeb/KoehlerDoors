@@ -330,6 +330,7 @@
             <label class="sidelite-side-control" id="sidelite-side-control">Single sidelite position — viewed from outside<select id="order-side"><option value="Left">Left of the door</option><option value="Right">Right of the door</option></select></label>
           </div>
           <div class="option"><div class="option-copy"><input type="checkbox" id="peephole" value="250" data-label="Peephole"><label for="peephole">Peephole</label></div><span class="price">+$250</span></div>
+          <div class="option"><div class="option-copy"><input type="checkbox" id="multi-point-lock" value="750" data-label="Multi Point Lock System"><label for="multi-point-lock">Multi Point Lock System</label></div><span class="price">+$750</span></div>
           <div class="option"><div class="option-copy"><input type="checkbox" id="mail-slot" value="350" data-label="Mail Slot"><label for="mail-slot">Mail Slot</label></div><span class="price">+$350</span></div>
           <div class="option"><div class="option-copy"><input type="checkbox" id="dog-door" value="600" data-label="Dog door"><label for="dog-door">Dog Door</label></div><span class="price">+$600</span></div>
           <div class="option"><div class="option-copy"><input type="checkbox" id="wood-grain" value="200" data-label="Wood grain"><label for="wood-grain">Wood Grain</label></div><span class="price">+$200</span></div>
@@ -701,7 +702,7 @@
       const sidelite = form.querySelector('input[name="sidelite"]:checked');
       const glass = form.querySelector('input[name="glass-style"]:checked');
       const finish = form.querySelector('input[name="finish"]:checked');
-      const selectedOptions = ['peephole','mail-slot','dog-door','wood-grain']
+      const selectedOptions = ['peephole','multi-point-lock','mail-slot','dog-door','wood-grain']
         .map(id => document.getElementById(id))
         .filter(item => item.checked)
         .map(item => item.dataset.label);
@@ -1131,7 +1132,7 @@
       const glass=selected('glass-style');
       if(glass)tags.push(glass.dataset.label+(glass.id==='decorative'&&selected('decorative-design')?' · '+selected('decorative-design').value:''));
       if(selected('finish'))tags.push(selected('finish').dataset.label);
-      for(const id of ['peephole','mail-slot','dog-door','wood-grain','impact'])if(document.getElementById(id).checked)tags.push(document.getElementById(id).dataset.label);
+      for(const id of ['peephole','multi-point-lock','mail-slot','dog-door','wood-grain','impact'])if(document.getElementById(id).checked)tags.push(document.getElementById(id).dataset.label);
       document.getElementById('preview-summary').innerHTML=tags.map(t=>`<span>${escapeHTML(t)}</span>`).join('');
       const notes=[];
       if(selected('glass-style')?.id==='sdl'&&selected('sidelite')?.id!=='no-sidelites')notes.push('SDL sidelites are a custom construction request; confirm manufacturer availability and pricing before ordering.');
@@ -1158,7 +1159,7 @@
     function orderRows() {
       const door=selected('door'), glass=selected('glass-style');
       const solidModel=solidCatalog.find(x=>x.code===selected('door-style')?.value);
-      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
+      const rows=[['Door',door?.dataset.label],['Width selection',selected('width')?.dataset.label+' (confirm per leaf / overall below)'],['Height selection',selected('height')?.dataset.label],['Catalog model',selected('door-style')?.value||'To be confirmed'],['Sidelites',sideliteDescription()],['Glass',glass?glass.dataset.label+(glass.id==='decorative'?' — '+(selected('decorative-design')?.value||'Design to be confirmed'):''):(door?.dataset.glass==='true'?'Clear / standard; confirm insert':'Solid door')],['Finish option',selected('finish')?.dataset.label||'To be confirmed'],['Impact rated',document.getElementById('impact').checked?'Yes — verify approval and DP':'No'],['Accessories',['peephole','multi-point-lock','mail-slot','dog-door','wood-grain'].filter(id=>document.getElementById(id).checked).map(id=>document.getElementById(id).dataset.label).join(', ')||'None']];
       if(solidModel)rows.splice(4,0,['Catalog product family',solidModel.family],['Door surface',solidModel.surface]);
       if(door?.dataset.glass==='true')rows.splice(4,0,['Glazing construction','Lip-lite / framed glass insert — no flush glazing']);
       if(['gbg','sdl'].includes(glass?.id)){rows.push(['Door lite pattern',gridPatternSummary()]);if(selected('sidelite')?.id!=='no-sidelites'){rows.push(['Sidelite lite pattern',gridPatternSummary(true)]);if(glass.id==='sdl')rows.push(['Sidelite grid construction','Custom SDL — confirm availability and pricing']);}}
